@@ -1,0 +1,13 @@
+arp -a #list
+
+ip route | awk '/default/ {print $3}' #get gateway IP
+
+#Get all devices on this network
+nmap -sn "$(ip route | awk '/default/ {print $3}')"/24 -oG - | grep 'Status: Up'
+
+#print types of connections that are available
+nmap -p 80,443,22 192.168.1.184 | grep open | awk '{print $3}'
+
+-----
+
+Need to abstract out the behavior to allow virtual keyboard input at the same time as CLI interface
