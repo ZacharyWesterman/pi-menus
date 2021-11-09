@@ -14,7 +14,7 @@ if __name__ == '__main__':
 
 		# display.put('input: ', 0, 0)
 		# result = display.get()
-		result = display.menu(main_menu, 'Example menu')
+		result = display.menu(main_menu)
 		display.clear()
 		display.put(f'result={result}', 0, 1)
 

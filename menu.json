@@ -1,13 +1,16 @@
-[
-	{
-		"text": "option 1",
-		"alt": "owo what's this?"
-	},
-	{
-		"text": "option 2",
-		"alt": "secret message :)"
-	},
-	{
-		"text": "option 3"
-	}
-]
+{
+	"title": "This is a title",
+	"options": [
+		{
+			"text": "option 1",
+			"alt": "owo what's this?"
+		},
+		{
+			"text": "option 2",
+			"alt": "secret message :)"
+		},
+		{
+			"text": "option 3"
+		}
+	]
+}

@@ -82,6 +82,7 @@ def __print_menu(options: list, title: str = '') -> None:
 	global __terminal
 
 	yx = __terminal.getyx()
+	__terminal.move(0,0)
 
 	if title:
 		__terminal.addstr(0, 0, f'{title}\n', curses.A_BOLD)
@@ -97,11 +98,12 @@ def __print_menu(options: list, title: str = '') -> None:
 	__terminal.move(yx[0], yx[1])
 	__terminal.refresh()
 
-
-def menu(options: list, title: str = '') -> int:
+def menu(menu_item: dict) -> int:
 	global __terminal
 
-	__terminal.move(0,0)
+	options = menu_item['options'] if 'options' in menu_item else []
+	title = menu_item['title'] if 'title' in menu_item else ''
+
 	__print_menu(options, title)
 
 	while True:
@@ -115,6 +117,10 @@ def menu(options: list, title: str = '') -> int:
 				__terminal.move(y + 1, 0) #Move up
 			elif c[2] == 65 and y > 0:
 				__terminal.move(y - 1, 0) #Move down
+			elif c[2] == 67:
+				return y #index of chosen option
+			elif c[2] == 68:
+				raise CancelInput
 			elif c[1] == curses.ERR:
 				raise CancelInput
 
