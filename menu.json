@@ -1,16 +1,24 @@
 {
-	"title": "This is a title",
-	"options": [
-		{
-			"text": "option 1",
-			"alt": "owo what's this?"
-		},
-		{
-			"text": "option 2",
-			"alt": "secret message :)"
-		},
-		{
-			"text": "option 3"
-		}
-	]
+	"main": {
+		"type": "menu",
+		"title": "Main Menu",
+		"options": [
+			{
+				"text": "Network",
+				"alt": "Network",
+				"goto": "network"
+			}
+		]
+	},
+
+	"network": {
+		"type": "menu",
+		"title": "Network",
+		"options": [
+			{
+				"text": "SSID",
+				"alt": "{network_ssid}"
+			}
+		]
+	}
 }

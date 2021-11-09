@@ -10,16 +10,28 @@ if __name__ == '__main__':
 		display.start()
 
 		with open('menu.json', 'r') as fp:
-			main_menu = json.load(fp)
+			menu_display = json.load(fp)
 
+		menus = ['main']
 		# display.put('input: ', 0, 0)
 		# result = display.get()
-		result = display.menu(main_menu)
-		display.clear()
-		display.put(f'result={result}', 0, 1)
 
-		time.sleep(1)
+		while True:
+			this_menu = menu_display[menus[-1]]
+			try:
+				result = display.menu(this_menu)
+				this_option = this_menu['options'][result]
+				if 'goto' in this_option:
+					menus += [this_option['goto']]
+			except display.CancelInput:
+				menus = menus[:-1]
+				if not len(menus):
+					break
+
+			# print(menus)
+
 		display.stop()
+		exit()
 
 	except KeyboardInterrupt:
 		display.stop()
