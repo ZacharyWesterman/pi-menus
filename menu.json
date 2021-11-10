@@ -13,11 +13,10 @@
 
 	"network": {
 		"type": "menu",
-		"title": "Network",
+		"title": "{network_ssid}",
 		"options": [
 			{
-				"text": "SSID",
-				"alt": "{network_ssid}"
+				"text": "Change SSID"
 			}
 		]
 	}

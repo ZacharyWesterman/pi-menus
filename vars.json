@@ -1,0 +1,5 @@
+{
+	"network_ssid": {
+		"bash": "iw dev | grep ssid | head -1 | xargs | cut -b 6-"
+	}
+}

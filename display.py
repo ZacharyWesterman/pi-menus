@@ -4,6 +4,8 @@
 import subprocess, time
 import curses
 
+import variables
+
 from enum import Enum
 class message(Enum):
 	text = 1
@@ -85,15 +87,15 @@ def __print_menu(options: list, title: str = '') -> None:
 	__terminal.move(0,0)
 
 	if title:
-		__terminal.addstr(0, 0, f'{title}\n', curses.A_BOLD)
+		__terminal.addstr(0, 0, variables.parse(title)+'\n', curses.A_BOLD)
 
 	for i in range(0, len(options)):
 		if i == yx[0]:
 			text = options[i]['alt'] if 'alt' in options[i] else options[i]['text']
-			__terminal.addstr(f'> {text}\n', curses.A_REVERSE)
+			__terminal.addstr('> '+variables.parse(text)+'\n', curses.A_REVERSE)
 		else:
 			text = options[i]['text']
-			__terminal.addstr(f'> {text}\n')
+			__terminal.addstr('> '+variables.parse(text)+'\n')
 
 	__terminal.move(yx[0], yx[1])
 	__terminal.refresh()
@@ -130,3 +132,6 @@ def menu(menu_item: dict) -> int:
 		time.sleep(0.1)
 
 	raise "Menu reached an invalid state!"
+
+def message(text: str, title: str = '') -> None:
+	pass
