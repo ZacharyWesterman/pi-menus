@@ -87,24 +87,49 @@ def __print_menu(options: list, title: str = '') -> None:
 	__terminal.move(0,0)
 
 	if title:
-		__terminal.addstr(0, 0, variables.parse(title)+'\n', curses.A_BOLD)
+		__terminal.addstr(0, 0, title+'\n', curses.A_BOLD)
 
 	for i in range(0, len(options)):
 		if i == yx[0]:
 			text = options[i]['alt'] if 'alt' in options[i] else options[i]['text']
-			__terminal.addstr('> '+variables.parse(text)+'\n', curses.A_REVERSE)
+			__terminal.addstr('> '+text+'\n', curses.A_REVERSE)
 		else:
 			text = options[i]['text']
-			__terminal.addstr('> '+variables.parse(text)+'\n')
+			__terminal.addstr('> '+text+'\n')
 
 	__terminal.move(yx[0], yx[1])
 	__terminal.refresh()
+
+def __parse_menu_option(option: dict) -> dict:
+	new_opt = {}
+	for i in option:
+		new_opt[i] = variables.parse(option[i])
+
+	return new_opt
 
 def menu(menu_item: dict) -> int:
 	global __terminal
 
 	options = menu_item['options'] if 'options' in menu_item else []
-	title = menu_item['title'] if 'title' in menu_item else ''
+	title = variables.parse(menu_item['title']) if 'title' in menu_item else ''
+
+	# Parse the options
+	options = []
+	for option in menu_item['options']:
+		options += [__parse_menu_option(option)]
+	menu_item['options'] = options
+
+	# If there's a template (for dynamic lists), build it and add to options
+	if 'template' in menu_item:
+		var = menu_item['template']['var']
+		value = variables.get(var)
+		variables.set(var, value)
+		for line in value.split('\n'):
+			variables.set('line', line)
+			variables.set('item', line.split())
+			for option in menu_item['template']['options']:
+				menu_item['options'] += [__parse_menu_option(option)]
+
 
 	__print_menu(options, title)
 
@@ -112,6 +137,7 @@ def menu(menu_item: dict) -> int:
 		y = __terminal.getyx()[0]
 		c = [__terminal.getch(), __terminal.getch(), __terminal.getch()]
 		if c[0] == ord('\n'):
+			clear()
 			return y #index of chosen option
 		elif c[0] == 27: # Escape characters
 			#Navigate menu
@@ -120,10 +146,13 @@ def menu(menu_item: dict) -> int:
 			elif c[2] == 65 and y > 0:
 				__terminal.move(y - 1, 0) #Move down
 			elif c[2] == 67:
+				clear()
 				return y #index of chosen option
 			elif c[2] == 68:
+				clear()
 				raise CancelInput
 			elif c[1] == curses.ERR:
+				clear()
 				raise CancelInput
 
 			__print_menu(options, title)

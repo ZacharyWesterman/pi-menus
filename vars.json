@@ -1,5 +1,13 @@
 {
 	"network_ssid": {
 		"bash": "iw dev | grep ssid | head -1 | xargs | cut -b 6-"
+	},
+
+	"network_list": {
+		"bash": "nmcli -t -f ssid dev wifi | sort | uniq"
+	},
+
+	"device_list": {
+		"bash": "nmap -sn \"$(ip route | awk '/default/ {print $3}')\"/24 -oG - | grep 'Status: Up'"
 	}
 }

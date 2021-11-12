@@ -33,3 +33,11 @@ def get(key: str):
 			return '{' + key + '}'
 	else:
 		return __variables[key]
+
+def set(key: str, value: str) -> None:
+	global __variables
+	__variables[key] = value
+
+def unset(key: str) -> None:
+	global __variables
+	__variables.pop(key, None)

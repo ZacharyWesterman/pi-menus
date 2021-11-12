@@ -16,8 +16,42 @@
 		"title": "{network_ssid}",
 		"options": [
 			{
-				"text": "Change SSID"
+				"text": "SSID",
+				"goto": "network_list"
+			},
+			{
+				"text": "List Devices",
+				"goto": "device_list"
 			}
 		]
+	},
+
+	"network_list": {
+		"type": "menu",
+		"title": "Available Networks",
+		"template": {
+			"var": "network_list",
+			"options": [
+				{
+					"text": "{line}"
+				}
+			]
+		},
+		"options": []
+	},
+
+	"device_list": {
+		"type": "menu",
+		"title": "Devices on Network",
+		"template": {
+			"var": "device_list",
+			"options": [
+				{
+					"text": "{item[1]}",
+					"alt": "{item[2]}"
+				}
+			]
+		},
+		"options": []
 	}
 }
