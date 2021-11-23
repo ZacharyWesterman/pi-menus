@@ -20,7 +20,7 @@ if __name__ == '__main__':
 			this_menu = menu_display[menus[-1]]
 			try:
 				result = display.menu(this_menu)
-				this_option = this_menu['options'][result]
+				this_option = display.build_options(this_menu)[result]
 				if 'goto' in this_option:
 					menus += [this_option['goto']]
 			except display.CancelInput:
