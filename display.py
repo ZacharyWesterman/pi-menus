@@ -107,17 +107,11 @@ def __parse_menu_option(option: dict) -> dict:
 
 	return new_opt
 
-def menu(menu_item: dict) -> int:
-	global __terminal
-
-	options = menu_item['options'] if 'options' in menu_item else []
-	title = variables.parse(menu_item['title']) if 'title' in menu_item else ''
-
-	# Parse the options
+def build_options(menu_item: dict) -> list:
 	options = []
+
 	for option in menu_item['options']:
 		options += [__parse_menu_option(option)]
-	menu_item['options'] = options
 
 	# If there's a template (for dynamic lists), build it and add to options
 	if 'template' in menu_item:
@@ -128,9 +122,18 @@ def menu(menu_item: dict) -> int:
 			variables.set('line', line)
 			variables.set('item', line.split())
 			for option in menu_item['template']['options']:
-				menu_item['options'] += [__parse_menu_option(option)]
+				options += [__parse_menu_option(option)]
+
+	return options
 
 
+def menu(menu_item: dict) -> int:
+	global __terminal
+
+	title = variables.parse(menu_item['title']) if 'title' in menu_item else ''
+
+
+	options = build_options(menu_item)
 	__print_menu(options, title)
 
 	while True:
