@@ -47,8 +47,8 @@
 			"var": "device_list",
 			"options": [
 				{
-					"text": "{item[1]}",
-					"alt": "{item[2]}"
+					"text": "{item[2]}",
+					"alt": "{item[1]}"
 				}
 			]
 		},
