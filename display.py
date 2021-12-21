@@ -9,7 +9,7 @@ import variables
 from enum import Enum
 class message(Enum):
 	text = 1
-	number = 2
+	password = 2
 
 class CancelInput(Exception):
 	def __init__(self):
@@ -42,7 +42,7 @@ def put(text, x, y) -> None:
 	__terminal.addstr(y, x, text)
 	__terminal.refresh()
 
-def get(msg_type: message = message.text) -> str:
+def get(hidden: bool = True) -> str:
 	global __terminal
 	curses.curs_set(1)
 
@@ -70,7 +70,7 @@ def get(msg_type: message = message.text) -> str:
 					__terminal.refresh()
 			else:
 				text += chr(c)
-				__terminal.addch(chr(c))
+				__terminal.addch('*' if hidden else chr(c))
 				__terminal.refresh()
 
 			continue
@@ -103,7 +103,12 @@ def __print_menu(options: list, title: str = '') -> None:
 def __parse_menu_option(option: dict) -> dict:
 	new_opt = {}
 	for i in option:
-		new_opt[i] = variables.parse(option[i])
+		if type(option[i]) is str:
+			new_opt[i] = variables.parse(option[i])
+		elif type(option[i]) is dict:
+			new_opt[i] = __parse_menu_option(option[i])
+		else:
+			new_opt[i] = option[i]
 
 	return new_opt
 

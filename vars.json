@@ -1,13 +1,22 @@
 {
 	"network_ssid": {
-		"bash": "iw dev | grep ssid | head -1 | xargs | cut -b 6-"
+		"get": "iw dev | grep ssid | head -1 | xargs | cut -b 6-"
 	},
 
 	"network_list": {
-		"bash": "nmcli -t -f ssid dev wifi | sort | uniq"
+		"get": "nmcli -t -f ssid dev wifi | sort | uniq"
 	},
 
 	"device_list": {
-		"bash": "nmap -sn \"$(ip route | awk '/default/ {print $3}')\"/24 -oG - | grep 'Status: Up'"
+		"get": "nmap -sn \"$(ip route | awk '/default/ {print $3}' | head -1)\"/24 -oG - | grep 'Status: Up'"
+	},
+
+	"network_device": {
+		"get": "iw dev | grep Interface | head -1 | xargs | cut -b 11-"
+	},
+
+	"network_pass": {
+		"set": "iwconfig {network_device} essid '{line}' key s:'{network_pass}'; dhclient {network_device}",
+		"unset": [ "network_ssid" ]
 	}
 }

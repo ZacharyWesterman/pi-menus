@@ -27,8 +27,8 @@ def get(key: str):
 	if key not in __variables:
 		if key not in __vars_config:
 			return '{' + key + '}' #will be wrong value, but should be obvious when displayed
-		elif 'bash' in __vars_config[key]:
-			return subprocess.check_output(__vars_config[key]['bash'], shell=True).decode('utf-8').rstrip('\n')
+		elif 'get' in __vars_config[key]:
+			return subprocess.check_output(__vars_config[key]['get'], shell=True).decode('utf-8').rstrip('\n')
 		else:
 			return '{' + key + '}'
 	else:
@@ -37,6 +37,13 @@ def get(key: str):
 def set(key: str, value: str) -> None:
 	global __variables
 	__variables[key] = value
+	if key in __vars_config:
+		if 'set' in __vars_config[key]:
+			cmd = parse(__vars_config[key]['set'])
+			subprocess.check_output(cmd, shell=True)
+		if 'unset' in __vars_config[key]:
+			for i in __vars_config[key]['unset']:
+				unset(i)
 
 def unset(key: str) -> None:
 	global __variables

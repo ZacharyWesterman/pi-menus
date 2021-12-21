@@ -4,6 +4,7 @@
 import display
 import json
 import time
+import variables
 
 if __name__ == '__main__':
 	try:
@@ -21,12 +22,24 @@ if __name__ == '__main__':
 			try:
 				result = display.menu(this_menu)
 				this_option = display.build_options(this_menu)[result]
-				if 'goto' in this_option:
+
+				if 'input' in this_option:
+					value = display.get('password' in this_option['input'] and this_option['input']['password'])
+					variables.set('line', this_option['text'])
+					variables.set('item', this_option['text'].split())
+					value = variables.set(this_option['input']['var'], value)
+					with open('out.txt', 'a') as fp:
+						fp.write(str(value) + '\n')
+					break
+
+				if 'return' in this_option and this_option['return']:
+					menus = menus[:-1]
+					if not len(menus): break
+				elif 'goto' in this_option:
 					menus += [this_option['goto']]
 			except display.CancelInput:
 				menus = menus[:-1]
-				if not len(menus):
-					break
+				if not len(menus): break
 
 			# print(menus)
 

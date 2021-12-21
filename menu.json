@@ -16,7 +16,7 @@
 		"title": "{network_ssid}",
 		"options": [
 			{
-				"text": "SSID",
+				"text": "Change Network",
 				"goto": "network_list"
 			},
 			{
@@ -33,7 +33,12 @@
 			"var": "network_list",
 			"options": [
 				{
-					"text": "{line}"
+					"text": "{line}",
+					"input": {
+						"var": "network_pass",
+						"password": true
+					},
+					"return": true
 				}
 			]
 		},
