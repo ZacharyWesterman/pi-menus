@@ -1,10 +1,11 @@
 {
 	"network_ssid": {
-		"get": "iw dev | grep ssid | head -1 | xargs | cut -b 6-"
+		"get": "iw dev | grep ssid | head -1 | xargs | cut -b 6-",
 	},
 
 	"network_list": {
-		"get": "nmcli -t -f ssid dev wifi | sort | uniq"
+		"get[not_working]": "nmcli -t -f ssid dev wifi | sort | uniq",
+		"get": "iwlist wlan0 scanning | grep ESSID | grep -v '\"\"' | grep -v '\\x' | sed 's/^[ \\t]*ESSID:\"//' | sed 's/\"$//' | sort | uniq"
 	},
 
 	"device_list": {
