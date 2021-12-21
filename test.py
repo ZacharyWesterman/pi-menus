@@ -28,9 +28,6 @@ if __name__ == '__main__':
 					variables.set('line', this_option['text'])
 					variables.set('item', this_option['text'].split())
 					value = variables.set(this_option['input']['var'], value)
-					# with open('out.txt', 'a') as fp:
-					# 	fp.write(str(value) + '\n')
-					break
 
 				if 'return' in this_option and this_option['return']:
 					menus = menus[:-1]
