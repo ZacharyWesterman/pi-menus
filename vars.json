@@ -17,7 +17,7 @@
 	},
 
 	"network_pass": {
-		"set": "iwconfig {network_device} essid '{line}' key s:'{network_pass}'; dhclient {network_device}",
+		"set": "ifdown {network_device}; iwconfig {network_device} essid '{line}' key s:'{network_pass}'; dhclient {network_device}; ifup {network_device}",
 		"unset": [ "network_ssid", "device_list" ]
 	}
 }
