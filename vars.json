@@ -16,7 +16,7 @@
 	},
 
 	"network_pass": {
-		"set": "sed 's/ssid=\"[^\"]*\"/ssid=\"{line}\"/' /etc/wpa_supplicant/wpa_supplicant.conf | sed 's/psk=\"[^\"]*\"/psk=\"{network_pass}\"/' >tmp; mv tmp /etc/wpa_supplicant/wpa_supplicant.conf; wpa_cli -i '{network_device}' reconfigure",
+		"set": "sed 's/ssid=\"[^\"]*\"/ssid=\"{line}\"/' /etc/wpa_supplicant/wpa_supplicant.conf | sed 's/psk=\"[^\"]*\"/psk=\"{network_pass}\"/' >tmp; mv tmp /etc/wpa_supplicant/wpa_supplicant.conf; wpa_cli -i '{network_device}' reconfigure; ifconfig '{network_device}' up",
 		"unset": [ "network_ssid", "device_list" ]
 	}
 }
