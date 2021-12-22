@@ -4,9 +4,12 @@
 		"title": "Main Menu",
 		"options": [
 			{
-				"text": "Network",
-				"alt": "Network",
+				"text": "Network Options",
 				"goto": "network"
+			},
+			{
+				"text": "Software Version",
+				"goto": "software"
 			}
 		]
 	},
@@ -58,5 +61,16 @@
 			]
 		},
 		"options": []
+	},
+
+	"software": {
+		"type": "menu",
+		"title": "Version {software_version}",
+		"options": [
+			{
+				"text": "Fetch update",
+				"action": "git pull"
+			}
+		]
 	}
 }

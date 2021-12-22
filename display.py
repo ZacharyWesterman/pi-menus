@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 
-import subprocess, time
+import time
 import curses
 
 import variables
@@ -154,8 +154,10 @@ def menu(menu_item: dict) -> int:
 			elif c[2] == 65 and y > 0:
 				__terminal.move(y - 1, 0) #Move down
 			elif c[2] == 67:
-				clear()
-				return y #index of chosen option
+				#if this option does anything
+				if any(k in options[y] for k in ('input', 'action', 'return', 'goto')):
+					clear()
+					return y #then return the index of chosen option
 			elif c[2] == 68:
 				clear()
 				raise CancelInput
@@ -171,4 +173,5 @@ def menu(menu_item: dict) -> int:
 	raise "Menu reached an invalid state!"
 
 def message(text: str, title: str = '') -> None:
-	pass
+	clear()
+	put(text, 0, 0)

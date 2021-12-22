@@ -3,8 +3,8 @@
 
 import display
 import json
-import time
 import variables
+import subprocess
 
 if __name__ == '__main__':
 	try:
@@ -20,6 +20,7 @@ if __name__ == '__main__':
 		while True:
 			this_menu = menu_display[menus[-1]]
 			try:
+				display.message('Loading...')
 				result = display.menu(this_menu)
 				this_option = display.build_options(this_menu)[result]
 
@@ -28,6 +29,13 @@ if __name__ == '__main__':
 					variables.set('line', this_option['text'])
 					variables.set('item', this_option['text'].split())
 					value = variables.set(this_option['input']['var'], value)
+
+				if 'action' in this_option:
+					try:
+						display.message('Processing...')
+						subprocess.check_output(this_option['action'], shell=True)
+					except:
+						pass
 
 				if 'return' in this_option and this_option['return']:
 					menus = menus[:-1]
