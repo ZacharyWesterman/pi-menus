@@ -31,6 +31,9 @@ def get(key: str):
 	global __variables
 	global __vars_config
 
+	if key in __variables and key in __vars_config and 'cache' in __vars_config[key] and not __vars_config[key]['cache']:
+		unset(key)
+
 	if key not in __variables:
 		if key not in __vars_config:
 			return '{' + key + '}' #will be wrong value, but should be obvious when displayed
