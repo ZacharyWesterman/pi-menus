@@ -75,7 +75,7 @@ def get(hidden: bool = True) -> str:
 
 			continue
 
-		time.sleep(0.1)
+		time.sleep(0.05)
 
 	curses.curs_set(0)
 	return text
@@ -166,7 +166,7 @@ def menu(menu_item: dict) -> int:
 			__print_menu(options, title)
 			continue
 
-		time.sleep(0.1)
+		time.sleep(0.05)
 
 	raise "Menu reached an invalid state!"
 
