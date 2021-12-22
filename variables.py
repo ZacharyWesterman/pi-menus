@@ -11,6 +11,7 @@ __variables = {}
 
 def parse(text: str) -> str:
 	global __variables
+	global __vars_config
 
 	try:
 		return text.format(**__variables)
@@ -18,14 +19,17 @@ def parse(text: str) -> str:
 		for key in ex.args:
 			__variables[key] = get(key)
 
-		return text.format(**__variables)
+		result = text.format(**__variables)
+
+		for key in ex.args:
+			if key in __variables and key in __vars_config and 'cache' in __vars_config[key] and not __vars_config[key]['cache']:
+				unset(key)
+
+		return result
 
 def get(key: str):
 	global __variables
 	global __vars_config
-
-	if key in __variables and key in __vars_config and 'cache' in __vars_config[key] and not __vars_config[key]['cache']:
-		unset(key)
 
 	if key not in __variables:
 		if key not in __vars_config:

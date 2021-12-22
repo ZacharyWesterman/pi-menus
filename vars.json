@@ -1,15 +1,18 @@
 {
 	"network_ssid": {
-		"get": "iw dev | grep ssid | head -1 | xargs | cut -b 6-",
+		"get": "date",
+		"_get": "iw dev | grep ssid | head -1 | xargs | cut -b 6-",
 		"cache": false
 	},
 
 	"network_list": {
-		"get": "iwlist wlan0 scanning | grep ESSID | grep -v '\"\"' | grep -v '\\x' | sed 's/^[ \\t]*ESSID:\"//' | sed 's/\"$//' | sort | uniq"
+		"get": "iwlist wlan0 scanning | grep ESSID | grep -v '\"\"' | grep -v '\\x' | sed 's/^[ \\t]*ESSID:\"//' | sed 's/\"$//' | sort | uniq",
+		"cache": false
 	},
 
 	"device_list": {
-		"get": "nmap -sn \"$(ip route | awk '/default/ {print $3}' | head -1)\"/24 -oG - | grep 'Status: Up'"
+		"get": "nmap -sn \"$(ip route | awk '/default/ {print $3}' | head -1)\"/24 -oG - | grep 'Status: Up'",
+		"cache": false
 	},
 
 	"network_device": {
