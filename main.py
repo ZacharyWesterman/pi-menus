@@ -3,6 +3,7 @@
 
 import display
 import json
+import time
 import variables
 import subprocess
 
@@ -45,6 +46,8 @@ if __name__ == '__main__':
 			except display.CancelInput:
 				menus = menus[:-1]
 				if not len(menus): break
+
+			time.sleep(0.1)
 
 			# print(menus)
 
