@@ -21,7 +21,11 @@ class oled_menu(object):
 		scale = 11
 		offset = 0
 		maxDisp = int(self.disp.height / scale) + 1
-		startW = 0
+		startH = 0
+
+		if self.title != '':
+			startH = 1
+			draw.text((1,0), self.title, font=self.font, fill=0)
 
 		# If menu is longer than the display can handle, scroll menu with cursor
 		if (len(self.opt) > maxDisp) and (self.selected >= int(maxDisp / 2)):
@@ -30,13 +34,15 @@ class oled_menu(object):
 		# Draw the menu items
 		for i in range(offset, len(self.opt)):
 			opt = self.opt[i]
-			truePos = (i-offset)*scale
+			truePos = (i-offset+startH)*scale
 			if (i == self.selected): self.choiceDisp = truePos
 
-			draw.rectangle([(startW,truePos),(self.disp.width,truePos+scale-1)],fill=int(i != self.selected))
+			draw.rectangle([(0,truePos),(self.disp.width,truePos+scale-1)],fill=int(i != self.selected))
 
-			draw.text((startW+1,truePos), opt[0], font=self.font, fill=int(i == self.selected))
-			draw.text((self.disp.width-(scale*2),truePos), '>', font=self.font, fill=int(i == self.selected))
+			text = self.opt[i]['text']
+			alt_text = self.opt[i]['alt'] if 'alt' in self.opt[i] else text
+
+			draw.text((1,truePos), '> ' + (alt_text if i == self.selected else text), font=self.font, fill=int(i == self.selected))
 
 		# If menu is longer than the display can handle, show scroll bar
 		if len(self.opt) > maxDisp:
@@ -46,7 +52,7 @@ class oled_menu(object):
 			#nav bar
 			max = self.disp.height - 3
 			min = 2
-			barpos = ((max-min) * self.selected / len(optlist)) + min
+			barpos = ((max-min) * self.selected / len(self.opt)) + min
 			draw.rectangle([(self.disp.width-scale+2,barpos),(self.disp.width-3,barpos+scale-5)],fill=0)
 
 		self.disp.ShowImage(self.disp.getbuffer(image))
