@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 
-import display
+import oled_display as display
 import json
 import time
 import variables

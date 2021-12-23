@@ -42,7 +42,7 @@ def put(text, x, y) -> None:
 	__terminal.addstr(y, x, text)
 	__terminal.refresh()
 
-def get(hidden: bool = True) -> str:
+def get(hidden: bool = False) -> str:
 	global __terminal
 	curses.curs_set(1)
 
