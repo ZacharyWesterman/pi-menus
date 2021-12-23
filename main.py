@@ -22,8 +22,7 @@ if __name__ == '__main__':
 			this_menu = menu_display[menus[-1]]
 			try:
 				display.message('Loading...')
-				result = display.menu(this_menu)
-				this_option = display.build_options(this_menu)[result]
+				this_option = display.menu(this_menu)
 
 				if 'input' in this_option:
 					value = display.get('password' in this_option['input'] and this_option['input']['password'])

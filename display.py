@@ -146,7 +146,7 @@ def menu(menu_item: dict) -> int:
 		c = [__terminal.getch(), __terminal.getch(), __terminal.getch()]
 		if c[0] == ord('\n'):
 			clear()
-			return y #index of chosen option
+			return options[y] #chosen option
 		elif c[0] == 27: # Escape characters
 			#Navigate menu
 			if c[2] == 66 and y < (len(options) - 1):
@@ -157,7 +157,7 @@ def menu(menu_item: dict) -> int:
 				#if this option does anything
 				if any(k in options[y] for k in ('input', 'action', 'return', 'goto')):
 					clear()
-					return y #then return the index of chosen option
+					return options[y] #then return the chosen option
 			elif c[2] == 68:
 				clear()
 				raise CancelInput
