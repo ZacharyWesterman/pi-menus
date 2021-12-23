@@ -9,6 +9,8 @@ import subprocess
 
 if __name__ == '__main__':
 	try:
+		USER_SHUTDOWN = False
+
 		display.start()
 
 		with open('menu.json', 'r') as fp:
@@ -45,14 +47,17 @@ if __name__ == '__main__':
 				if len(menus) == 1:
 					#Prompt user if they want to shut down
 					shutdown_menu = {
-						'title': 'Shut Down?',
 						'options': [
 							{
-								'text': 'No',
+								'text': 'Shut Down',
 								'return': True
 							},
 							{
-								'text': 'Yes',
+								'text': 'Reset',
+								'return': True
+							},
+							{
+								'text': 'Cancel',
 								'return': True
 							}
 						]
@@ -60,7 +65,9 @@ if __name__ == '__main__':
 
 					try:
 						this_option = display.menu(shutdown_menu)
-						if this_option['text'] == 'Yes': break
+						if this_option['text'] == 'Shut Down':
+							USER_SHUTDOWN = True
+							break
 					except display.CancelInput:
 						pass
 				else:
@@ -71,12 +78,13 @@ if __name__ == '__main__':
 
 			# print(menus)
 
-		#User signalled shutdown
-		display.message('Shutting down...')
-		try:
-			subprocess.check_output(['shutdown', 'now'])
-		except:
-			pass
+		if USER_SHUTDOWN:
+			#User signalled shutdown
+			display.message('Shutting down...')
+			try:
+				subprocess.check_output(['shutdown', 'now'])
+			except:
+				pass
 		exit()
 
 	except KeyboardInterrupt:
