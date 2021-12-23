@@ -19,7 +19,7 @@
 	},
 
 	"network_pass": {
-		"set": "ifconfig wlan0 down; sed 's/ssid=\"[^\"]*\"/ssid=\"{line}\"/' /etc/wpa_supplicant/wpa_supplicant.conf | sed 's/psk=\"[^\"]*\"/psk=\"{network_pass}\"/' >tmp; mv tmp /etc/wpa_supplicant/wpa_supplicant.conf; wpa_cli -i wlan0 reconfigure; ifconfig wlan0 up",
+		"set": "ifconfig wlan0 down; sed 's/ssid=\"[^\"]*\"/ssid=\"{line}\"/' /etc/wpa_supplicant/wpa_supplicant.conf | sed 's/psk=\"[^\"]*\"/psk=\"{network_pass}\"/' >tmp; mv tmp /etc/wpa_supplicant/wpa_supplicant.conf; systemctl restart dhcpcd; ifconfig wlan0 up; wpa_cli -i wlan0 reconfigure",
 		"unset": [ "network_ssid", "device_list" ]
 	},
 
