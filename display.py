@@ -37,11 +37,6 @@ def clear() -> None:
 	global __terminal
 	__terminal.erase()
 
-def put(text, x, y) -> None:
-	global __terminal
-	__terminal.addstr(y, x, text)
-	__terminal.refresh()
-
 def get(hidden: bool = False) -> str:
 	global __terminal
 	curses.curs_set(1)
@@ -173,5 +168,7 @@ def menu(menu_item: dict) -> int:
 	raise "Menu reached an invalid state!"
 
 def message(text: str, title: str = '') -> None:
+	global __terminal
 	clear()
-	put(text, 0, 0)
+	__terminal.addstr(0, 0, text)
+	__terminal.refresh()

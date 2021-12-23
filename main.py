@@ -15,8 +15,6 @@ if __name__ == '__main__':
 			menu_display = json.load(fp)
 
 		menus = ['main']
-		# display.put('input: ', 0, 0)
-		# result = display.get()
 
 		while True:
 			this_menu = menu_display[menus[-1]]

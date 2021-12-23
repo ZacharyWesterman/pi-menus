@@ -39,11 +39,6 @@ def clear() -> None:
 	global __display
 	__display.clear()
 
-def put(text, x, y) -> None:
-	global __terminal
-	__terminal.addstr(y, x, text)
-	__terminal.refresh()
-
 def get(hidden: bool = False) -> str:
 	global __display
 	keys = keyboard.keyboard(__display)
@@ -119,7 +114,6 @@ def build_options(menu_item: dict) -> list:
 
 	return options
 
-
 def menu(menu_item: dict) -> int:
 	global __display
 
@@ -165,5 +159,8 @@ def menu(menu_item: dict) -> int:
 		return menu.select()
 
 def message(text: str, title: str = '') -> None:
-	clear()
-	put(text, 0, 0)
+	global __display
+	image = Image.new('1', (__display.width, __display.height), "WHITE")
+	draw = ImageDraw.Draw(image)
+	draw.text((1,0), text, font=ImageFont.load_default(), fill=0)
+	__display.ShowImage(__display.getbuffer(image))
