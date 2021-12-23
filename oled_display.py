@@ -41,19 +41,26 @@ def clear() -> None:
 
 def get(hidden: bool = False) -> str:
 	global __display
+	global MENU_EXIT
+	global MENU_FAILED
+
 	keys = keyboard.keyboard(__display)
 	keys.hidden = hidden
 	keys.draw(True)
 
 	MENU_EXIT = False
 	MENU_FAILED = False
+
 	def menu_back(_ = None):
+		global MENU_EXIT
 		if keys.text == '':
 			MENU_EXIT = True
 		else:
 			keys.backspace()
 
 	def menu_fwd(_ = None):
+		global MENU_EXIT
+		global MENU_FAILED
 		MENU_FAILED = True
 		MENU_EXIT = True
 
