@@ -9,4 +9,7 @@ cd "$(dirname ${BASH_SOURCE[0]})"
 while true
 do
 	./main.py
+	[ -e CMD_STOP ] && break
 done
+
+rm -f CMD_STOP
