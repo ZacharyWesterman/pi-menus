@@ -53,15 +53,15 @@ def get(hidden: bool = False) -> str:
 
 	def menu_back(_ = None):
 		global MENU_EXIT
+		global MENU_FAILED
 		if keys.text == '':
+			MENU_FAILED = True
 			MENU_EXIT = True
 		else:
 			keys.backspace()
 
 	def menu_fwd(_ = None):
 		global MENU_EXIT
-		global MENU_FAILED
-		MENU_FAILED = True
 		MENU_EXIT = True
 
 	GPIO.add_event_detect(pins.KEY_LEFT, GPIO.FALLING, callback=keys.left, bouncetime=200)
