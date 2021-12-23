@@ -20,12 +20,13 @@ class oled_menu(object):
 		pos = 0
 		scale = 11
 		offset = 0
-		maxDisp = int(self.disp.height / scale) + 1
 		startH = 0
 
 		if self.title != '':
 			startH = 1
 			draw.text((1,0), self.title, font=self.font, fill=0)
+
+		maxDisp = int(self.disp.height / scale) + 1 - startH
 
 		# If menu is longer than the display can handle, scroll menu with cursor
 		if (len(self.opt) > maxDisp) and (self.selected >= int(maxDisp / 2)):
