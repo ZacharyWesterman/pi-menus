@@ -41,14 +41,42 @@ if __name__ == '__main__':
 				elif 'goto' in this_option:
 					menus += [this_option['goto']]
 			except display.CancelInput:
-				menus = menus[:-1]
-				if not len(menus): break
+				#if we're at the root menu and user exits
+				if len(menus) == 1:
+					#Prompt user if they want to shut down
+					shutdown_menu = {
+						'title': 'Shut Down?',
+						'options': [
+							{
+								'text': 'No',
+								'return': True
+							},
+							{
+								'text': 'Yes',
+								'return': True
+							}
+						]
+					}
+
+					try:
+						this_option = display.menu(shutdown_menu)
+						if this_option['text'] == 'Yes': break
+					except display.CancelInput:
+						pass
+				else:
+					#go to parent menu
+					menus = menus[:-1]
 
 			time.sleep(0.1)
 
 			# print(menus)
 
-		display.stop()
+		#User signalled shutdown
+		display.message('Shutting down...')
+		try:
+			subprocess.check_output('shutdown now')
+		except:
+			pass
 		exit()
 
 	except KeyboardInterrupt:
