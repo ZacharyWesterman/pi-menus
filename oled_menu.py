@@ -62,10 +62,14 @@ class oled_menu(object):
 		if self.selected < 0:
 			self.selected = len(self.opt) - 1
 
+		self.display()
+
 	def down(self, _ = None):
 		self.selected += 1
 		if self.selected >= len(self.opt):
 			self.selected = 0
+
+		self.display()
 
 	def select(self, _=None):
 		return self.opt[self.selected]
