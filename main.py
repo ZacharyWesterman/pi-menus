@@ -74,7 +74,7 @@ if __name__ == '__main__':
 		#User signalled shutdown
 		display.message('Shutting down...')
 		try:
-			subprocess.check_output('shutdown now')
+			subprocess.check_output(['shutdown', 'now'])
 		except:
 			pass
 		exit()
