@@ -116,6 +116,8 @@ def build_options(menu_item: dict) -> list:
 
 def menu(menu_item: dict) -> int:
 	global __display
+	global MENU_EXIT
+	global MENU_FAILED
 
 	title = variables.parse(menu_item['title']) if 'title' in menu_item else ''
 
@@ -129,10 +131,13 @@ def menu(menu_item: dict) -> int:
 	MENU_EXIT = False
 
 	def menu_back(_ = None):
+		global MENU_EXIT
+		global MENU_FAILED
 		MENU_EXIT = True
 		MENU_FAILED = True
 
 	def menu_fwd(_ = None):
+		global MENU_EXIT
 		if any(k in menu.select() for k in ('input', 'action', 'return', 'goto')):
 			MENU_EXIT = True
 
