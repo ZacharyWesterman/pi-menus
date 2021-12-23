@@ -10,3 +10,5 @@ while [ ! -e CMD_STOP ]
 do
 	./main.py
 done
+
+rm -f CMD_STOP

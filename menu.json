@@ -69,7 +69,7 @@
 		"options": [
 			{
 				"text": "Fetch update",
-				"action": "git pull &>/dev/null; chown pi:pi .git -R"
+				"action": "git pull; chown pi:pi .git -R"
 			}
 		]
 	}

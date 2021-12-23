@@ -68,6 +68,8 @@ if __name__ == '__main__':
 						if this_option['text'] == 'Shut Down':
 							USER_SHUTDOWN = True
 							break
+						elif this_option['text'] == 'Reset':
+							break
 					except display.CancelInput:
 						pass
 				else:
