@@ -141,8 +141,8 @@ def menu(menu_item: dict) -> int:
 		if any(k in menu.select() for k in ('input', 'action', 'return', 'goto')):
 			MENU_EXIT = True
 
-	GPIO.add_event_detect(pins.KEY_LEFT, GPIO.FALLING, callback=menu_fwd, bouncetime=200)
-	GPIO.add_event_detect(pins.KEY_RIGHT, GPIO.FALLING, callback=menu_back, bouncetime=200)
+	GPIO.add_event_detect(pins.KEY_LEFT, GPIO.FALLING, callback=menu_back, bouncetime=200)
+	GPIO.add_event_detect(pins.KEY_RIGHT, GPIO.FALLING, callback=menu_fwd, bouncetime=200)
 	GPIO.add_event_detect(pins.KEY_UP, GPIO.FALLING, callback=menu.up, bouncetime=200)
 	GPIO.add_event_detect(pins.KEY_DOWN, GPIO.FALLING, callback=menu.down, bouncetime=200)
 	GPIO.add_event_detect(pins.KEY_PRESS, GPIO.FALLING, callback=menu_fwd, bouncetime=250)
