@@ -10,7 +10,7 @@ class oled_menu(object):
 		self.choiceDisp = 0
 
 	def options(self, optTree, title = ''):
-		self.opt = optTree['options']
+		self.opt = optTree
 		self.title = title
 
 	def display(self):
