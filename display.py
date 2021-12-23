@@ -120,7 +120,9 @@ def build_options(menu_item: dict) -> list:
 		variables.set(var, value)
 		for line in value.split('\n'):
 			variables.set('line', line)
-			variables.set('item', line.split())
+			items = line.split()
+			items += [''] * (10 - len(items))
+			variables.set('item', items)
 			for option in menu_item['template']['options']:
 				options += [__parse_menu_option(option)]
 

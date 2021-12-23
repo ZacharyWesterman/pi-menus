@@ -27,7 +27,9 @@ if __name__ == '__main__':
 				if 'input' in this_option:
 					value = display.get('password' in this_option['input'] and this_option['input']['password'])
 					variables.set('line', this_option['text'])
-					variables.set('item', this_option['text'].split())
+					items = this_option['text'].split()
+					items += [''] * (10 - len(items))
+					variables.set('item', items)
 					value = variables.set(this_option['input']['var'], value)
 
 				if 'action' in this_option:
