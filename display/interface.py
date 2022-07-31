@@ -47,7 +47,7 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 		pass
 
 	@abc.abstractmethod
-	def get(self, hidden: bool = False) -> str:
+	async def get(self, hidden: bool = False) -> str:
 		pass
 
 	@abc.abstractmethod

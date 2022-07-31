@@ -16,10 +16,15 @@ async def main():
 				"options": [
 					{
 						"text": "{line}",
+						"input": "software_version"
 					}
 				]
 			},
 		})
+
+		input = await disp.get()
+		disp.message(input, title='Result')
+		await asyncio.sleep(2)
 	except display.CancelInput:
 		pass #User cancelled
 	except Exception as e:

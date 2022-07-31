@@ -41,7 +41,8 @@ class Display(DisplayInterface):
 	def clear(self) -> None:
 		self.__terminal.erase()
 
-	def get(self, hidden: bool = False) -> str:
+	async def get(self, hidden: bool = False) -> str:
+		self.clear()
 		curses.curs_set(1)
 
 		startx = self.__terminal.getyx()[1]
@@ -73,7 +74,7 @@ class Display(DisplayInterface):
 
 				continue
 
-			time.sleep(0.05)
+			await asyncio.sleep(0.05)
 
 		curses.curs_set(0)
 		return text
