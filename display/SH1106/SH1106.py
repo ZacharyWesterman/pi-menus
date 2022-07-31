@@ -1,4 +1,4 @@
-import config
+from . import config
 import RPi.GPIO as GPIO
 import time
 import numpy as np
