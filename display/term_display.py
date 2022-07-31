@@ -91,16 +91,20 @@ class Display(DisplayInterface):
 	def vline(self, x_pos: int, y_pos: int, height: int) -> None:
 		self.__terminal.vline(y_pos, x_pos, '|', height)
 
-	def scrollbar(self, y_offset: int, item_index: int, total_items: int) -> None:
-		maxh = self.max_height()
-		maxw = self.max_width()
-		self.__terminal.vline(y_offset, maxw-3, ' ', maxh)
-		self.__terminal.vline(y_offset, maxw-2, ' ', maxh)
-		self.__terminal.vline(y_offset, maxw-1, ' ', maxh)
+	def rect(self, bounds: tuple, fill: bool) -> None:
+		raise Exception('term_display.rect is not defined!')
+		pass
 
-		# bar_pos = (maxh-y_offset) // total_items
-		bar_pos = item_index * (maxh-y_offset) // total_items
-		self.__terminal.vline(bar_pos+y_offset, maxw-2, '#', 1)
+	# def scrollbar(self, y_offset: int, item_index: int, total_items: int) -> None:
+	# 	maxh = self.max_height()
+	# 	maxw = self.max_width()
+	# 	self.__terminal.vline(y_offset, maxw-3, ' ', maxh)
+	# 	self.__terminal.vline(y_offset, maxw-2, ' ', maxh)
+	# 	self.__terminal.vline(y_offset, maxw-1, ' ', maxh)
+	#
+	# 	# bar_pos = (maxh-y_offset) // total_items
+	# 	bar_pos = item_index * (maxh-y_offset) // total_items
+	# 	self.__terminal.vline(bar_pos+y_offset, maxw-2, '#', 1)
 
 	def await_movement(self) -> None:
 		while True:

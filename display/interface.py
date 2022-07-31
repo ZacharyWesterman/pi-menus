@@ -62,7 +62,7 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 		pass
 
 	@abc.abstractmethod
-	def scrollbar(self, y_offset: int, item_index: int, total_items: int) -> None:
+	def rect(self, bounds: tuple, fill: bool) -> None:
 		pass
 
 	@abc.abstractmethod
@@ -89,7 +89,7 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 		offset += self.line_scale()
 
 		#Only display the options we can see in the window
-		max_displayable_options = (self.max_height() // scale) - offset
+		max_displayable_options = (self.max_height() - offset) // scale
 		total_options = len(options)
 		if total_options > max_displayable_options:
 			if self.menu_index >= max_displayable_options:
