@@ -5,7 +5,7 @@ from PIL import Image, ImageDraw, ImageFont
 import time
 
 import RPi.GPIO as GPIO
-from SH1106 import SH1106, config
+from .SH1106 import SH1106, config
 import pins
 
 from .oled_keyboard import keyboard
