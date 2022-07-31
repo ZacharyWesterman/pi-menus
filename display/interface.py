@@ -19,6 +19,24 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 		self.menu_index = 0
 		self.menu_max_options = 0
 
+	# The following methods MUST be implemented by child classes!
+
+	@abc.abstractmethod
+	def max_height(self) -> int:
+		pass
+
+	@abc.abstractmethod
+	def max_width(self) -> int:
+		pass
+
+	@abc.abstractmethod
+	def text_scale(self) -> int:
+		pass
+
+	@abc.abstractmethod
+	def line_scale(self) -> int:
+		pass
+
 	@abc.abstractmethod
 	def display(self) -> None:
 		pass
@@ -32,7 +50,19 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 		pass
 
 	@abc.abstractmethod
-	def put(self, row: int, text: str, *, bold: bool = False, italics: bool = False, inverted: bool = False, is_option: bool = False) -> None:
+	def put(self, y_pos: int, text: str, *, bold: bool = False, italics: bool = False, inverted: bool = False, is_option: bool = False) -> None:
+		pass
+
+	@abc.abstractmethod
+	def hline(self, x_pos: int, y_pos: int, width: int) -> None:
+		pass
+
+	@abc.abstractmethod
+	def vline(self, x_pos: int, y_pos: int, height: int) -> None:
+		pass
+
+	@abc.abstractmethod
+	def scrollbar(self, y_offset: int, item_index: int, total_items: int) -> None:
 		pass
 
 	@abc.abstractmethod
@@ -43,21 +73,48 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 
 	def __print_menu(self, options: list, title: str, subtitle: str) -> None:
 		offset = 0
+		scale = self.text_scale()
+
+		self.clear()
 
 		if len(title):
 			self.put(offset, title, bold = True)
-			offset += 1
+			offset += scale
 		if len(subtitle):
 			self.put(offset, subtitle, italics = True)
-			offset += 1
+			offset += scale
 
-		for i in range(0, len(options)):
+		#draw a line to separate title from options
+		self.hline(0, offset, self.max_width() - 1)
+		offset += self.line_scale()
+
+		#Only display the options we can see in the window
+		max_displayable_options = (self.max_height() // scale) - offset
+		total_options = len(options)
+		if total_options > max_displayable_options:
+			if self.menu_index >= max_displayable_options:
+				end = self.menu_index + 1
+				start = end - max_displayable_options
+			else:
+				start = 0
+				end = max_displayable_options
+		else:
+			start = 0
+			end = total_options
+
+		index = offset
+		for i in range(start, end):
 			if i == self.menu_index:
 				text = options[i]['alt'] if 'alt' in options[i] else options[i]['text']
-				self.put(i+offset, text, inverted = True, is_option = True)
+				self.put(index, text, inverted = True, is_option = True)
 			else:
 				text = options[i]['text']
-				self.put(i+offset, text, is_option = True)
+				self.put(index, text, is_option = True)
+
+			index += scale
+
+		if total_options > max_displayable_options:
+			self.menu_scrollbar(offset, max_displayable_options)
 
 		self.display()
 
@@ -100,11 +157,9 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 				if any(k in options[self.menu_index] for k in ('input', 'action', 'return', 'goto')):
 					break
 
-			self.clear()
 			return options[index]
 
 		except CancelInput:
-			self.clear()
 			raise CancelInput
 
 	def __build_options(self, menu_item: dict) -> list:
@@ -139,3 +194,11 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 				new_opt[i] = option[i]
 
 		return new_opt
+
+	def menu_scrollbar(self, offset: int, max_displayable_options: int) -> None:
+		maxh = self.max_height() - 1
+		maxw = self.max_width() - 1
+
+		self.vline(maxw-2, offset, maxh)
+		self.vline(maxw-1, offset, maxh)
+		self.vline(maxw, offset, maxh)

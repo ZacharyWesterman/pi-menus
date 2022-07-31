@@ -9,13 +9,13 @@ from SH1106 import SH1106, config
 import pins
 
 from .oled_keyboard import keyboard
-import .oled_menu
+from .oled_menu import oled_menu
 
 from .interface import DisplayInterface, CancelInput
 
 class Display(DisplayInterface):
-	def __init__(self, *args):
-		super().__init__(*args)
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
 		pins.init()
 		self.__display = SH1106()
 		self.__display.Init()
