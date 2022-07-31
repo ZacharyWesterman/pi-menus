@@ -1,3 +1,5 @@
+from .interface import CancelInput
+
 try:
 	from .oled_display import Display
 except ModuleNotFoundError:

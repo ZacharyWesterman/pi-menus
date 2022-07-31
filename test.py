@@ -9,16 +9,15 @@ disp = display.Display(variables)
 try:
 	selected = disp.menu({
 		'title': 'sample menu',
+		'subtitle': 'some extra descriptive text',
 		'options': [
 			{ 'text': 'sample text' },
 			{ 'text': 'text 2' },
 		]
 	})
 
-	disp.clear()
-
 	print(selected)
 except display.CancelInput:
-	pass
+	print('User Cancelled')
 
 time.sleep(2)
