@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-
 
 from PIL import Image, ImageDraw, ImageFont
-import time
+import asyncio
 
 import RPi.GPIO as GPIO
 from .SH1106 import SH1106, config
@@ -46,23 +46,22 @@ class Display(DisplayInterface):
 		self.image = Image.new('1', (self.max_width(), self.max_height()), 'WHITE')
 		self.draw = ImageDraw.Draw(self.image)
 
-	def get(self, hidden: bool = False) -> str:
-		keys = keyboard(__display)
+	async def get(self, hidden: bool = False) -> str:
+		keys = keyboard(self.__display)
 		keys.hidden = hidden
 		keys.draw(True)
 
-		MENU_EXIT = False
-		MENU_FAILED = False
+		self.menu_failed = False
+		self.menu_exited = False
 
-		def menu_back(_ = None):
+		def menu_fail(_ = None):
 			if keys.text == '':
-				MENU_FAILED = True
-				MENU_EXIT = True
+				self.menu_failed = True
 			else:
 				keys.backspace()
 
-		def menu_fwd(_ = None):
-			MENU_EXIT = True
+		def menu_exit(_ = None):
+			self.menu_exited = True
 
 		GPIO.add_event_detect(pins.KEY_LEFT, GPIO.FALLING, callback=keys.left, bouncetime=200)
 		GPIO.add_event_detect(pins.KEY_RIGHT, GPIO.FALLING, callback=keys.right, bouncetime=200)
@@ -70,11 +69,11 @@ class Display(DisplayInterface):
 		GPIO.add_event_detect(pins.KEY_DOWN, GPIO.FALLING, callback=keys.down, bouncetime=200)
 		GPIO.add_event_detect(pins.KEY_PRESS, GPIO.FALLING, callback=keys.select, bouncetime=250)
 		GPIO.add_event_detect(pins.KEY1, GPIO.FALLING, callback=keys.toggleShift, bouncetime=250)
-		GPIO.add_event_detect(pins.KEY2, GPIO.FALLING, callback=menu_fwd, bouncetime=250)
-		GPIO.add_event_detect(pins.KEY3, GPIO.FALLING, callback=menu_back, bouncetime=250)
+		GPIO.add_event_detect(pins.KEY2, GPIO.FALLING, callback=menu_exit, bouncetime=250)
+		GPIO.add_event_detect(pins.KEY3, GPIO.FALLING, callback=menu_fail, bouncetime=250)
 
-		while not MENU_EXIT:
-			time.sleep(0.1)
+		while not (self.menu_exited or self.menu_failed):
+			await asyncio.sleep(0.1)
 
 		GPIO.remove_event_detect(pins.KEY_LEFT)
 		GPIO.remove_event_detect(pins.KEY_RIGHT)
@@ -85,7 +84,7 @@ class Display(DisplayInterface):
 		GPIO.remove_event_detect(pins.KEY2)
 		GPIO.remove_event_detect(pins.KEY3)
 
-		if MENU_FAILED:
+		if self.menu_failed:
 			raise CancelInput
 		else:
 			return keys.text
@@ -115,7 +114,7 @@ class Display(DisplayInterface):
 			(x_pos + 1, y_pos + height)
 		], fill=0)
 
-	def await_movement(self) -> None:
+	async def await_movement(self) -> None:
 		self.menu_failed = False
 		self.menu_exited = False
 
@@ -132,7 +131,7 @@ class Display(DisplayInterface):
 		GPIO.add_event_detect(pins.KEY_PRESS, GPIO.FALLING, callback=menu_exit, bouncetime=250)
 
 		while not (self.menu_exited or self.menu_failed):
-			time.sleep(0.1)
+			await asyncio.sleep(0.1)
 
 		GPIO.remove_event_detect(pins.KEY_LEFT)
 		GPIO.remove_event_detect(pins.KEY_RIGHT)

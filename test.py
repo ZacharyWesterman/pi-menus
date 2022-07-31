@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.7
 
 import display
 import variables
@@ -28,7 +28,8 @@ async def main():
 	except display.CancelInput:
 		pass #User cancelled
 	except Exception as e:
-		disp.message(str(e), title='ERROR', subtitle='Unhandled Exception')
+		# disp.message(str(e), title='ERROR', subtitle='Unhandled Exception')
+		print(e)
 		await asyncio.sleep(2)
 
 
@@ -37,4 +38,3 @@ if __name__ == '__main__':
 	asyncio.set_event_loop(loop)
 	loop.run_until_complete(main())
 	loop.close()
-# time.sleep(2)
