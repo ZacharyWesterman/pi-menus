@@ -1,5 +1,6 @@
 from enum import Enum
 import abc
+import asyncio
 
 class message(Enum):
 	text = 1
@@ -66,7 +67,7 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 		pass
 
 	@abc.abstractmethod
-	def await_movement(self) -> None:
+	async def await_movement(self) -> None:
 		pass
 
 	# Below this comment, no more methods need to be implemented by child classes.
@@ -118,13 +119,21 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 
 		self.display()
 
-	def message(self, text: str, title: str = '') -> None:
+	def message(self, text: str, *, title: str = '', subtitle: str = '') -> None:
 		self.clear()
+		offset = 0
 		if len(title):
-			self.put(0, title, bold = True)
-			self.put(1, text)
-		else:
-			self.put(0, text)
+			self.put(offset, title, bold = True)
+			offset += self.text_scale()
+		if len(subtitle):
+			self.put(offset, subtitle, italics = True)
+			offset += self.text_scale()
+
+		if len(subtitle) or len(title):
+			self.hline(0, offset, self.max_width())
+			offset += self.line_scale()
+
+		self.put(offset, text)
 		self.display()
 
 	def menu_move_down(self) -> None:
@@ -137,7 +146,7 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 			self.menu_index -= 1
 			self.redisplay_menu()
 
-	def menu(self, menu_item: dict) -> dict:
+	async def menu(self, menu_item: dict) -> dict:
 		title = self.variables.parse(menu_item['title']) if 'title' in menu_item else ''
 		subtitle = self.variables.parse(menu_item['subtitle']) if 'subtitle' in menu_item else ''
 		options = self.__build_options(menu_item)
@@ -148,19 +157,23 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 		self.scroll_up = self.menu_move_up
 		self.scroll_down = self.menu_move_down
 
-		try:
-			while True:
-				self.__print_menu(options, title, subtitle)
-				self.await_movement()
+		self.__print_menu(options, title, subtitle)
+		future = asyncio.ensure_future(self.await_movement())
+
+		while True:
+			if future.done():
+				await future #so we can also handle
 
 				#if this option does anything, we selected it
 				if any(k in options[self.menu_index] for k in ('input', 'action', 'return', 'goto')):
 					break
 
-			return options[index]
+				#Otherwise, redisplay the menu
+				future = asyncio.ensure_future(self.await_movement())
 
-		except CancelInput:
-			raise CancelInput
+			await asyncio.sleep(0.05)
+
+		return options[self.menu_index]
 
 	def __build_options(self, menu_item: dict) -> list:
 		options = []

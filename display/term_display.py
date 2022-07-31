@@ -3,6 +3,7 @@
 
 import time
 import curses
+import asyncio
 
 from .interface import DisplayInterface, CancelInput
 
@@ -106,7 +107,7 @@ class Display(DisplayInterface):
 	# 	bar_pos = item_index * (maxh-y_offset) // total_items
 	# 	self.__terminal.vline(bar_pos+y_offset, maxw-2, '#', 1)
 
-	def await_movement(self) -> None:
+	async def await_movement(self) -> None:
 		while True:
 			c = [self.__terminal.getch(), self.__terminal.getch(), self.__terminal.getch()]
 
@@ -127,4 +128,4 @@ class Display(DisplayInterface):
 
 				continue
 
-			time.sleep(0.05)
+			await asyncio.sleep(0.05)
