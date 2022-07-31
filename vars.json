@@ -26,5 +26,9 @@
 	"software_version": {
 		"get": "head -1 < version.txt",
 		"cache": false
+	},
+
+	"test_list": {
+		"get": "for i in 0 1 2 3 4 5; do echo \"option $i\"; done"
 	}
 }

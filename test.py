@@ -9,12 +9,19 @@ async def main():
 	disp = display.Display(variables)
 	try:
 		selected = await disp.menu({
-			'title': 'sample menu',
-			# 'subtitle': 'some extra descriptive text',
-			'options': [
-				{ 'text': f'option {i}' } for i in range(1,10)
-			]
+			'title': 'Software Version',
+			'subtitle': '{software_version}',
+			"template": {
+				"var": "test_list",
+				"options": [
+					{
+						"text": "{line}",
+					}
+				]
+			},
 		})
+	except display.CancelInput:
+		pass #User cancelled
 	except Exception as e:
 		disp.message(str(e), title='ERROR', subtitle='Unhandled Exception')
 		await asyncio.sleep(2)

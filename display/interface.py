@@ -72,7 +72,11 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 
 	# Below this comment, no more methods need to be implemented by child classes.
 
-	def __print_menu(self, options: list, title: str, subtitle: str) -> None:
+	def redisplay_menu(self) -> None:
+		title = self.menu_item.get('title', '')
+		subtitle = self.menu_item.get('subtitle', '')
+		options = self.menu_item.get('options', [])
+
 		offset = 0
 		scale = self.text_scale()
 
@@ -146,63 +150,80 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 			self.menu_index -= 1
 			self.redisplay_menu()
 
-	async def menu(self, menu_item: dict) -> dict:
-		title = self.variables.parse(menu_item['title']) if 'title' in menu_item else ''
-		subtitle = self.variables.parse(menu_item['subtitle']) if 'subtitle' in menu_item else ''
-		options = self.__build_options(menu_item)
+	async def __load_menu_vars(self) -> None:
+		title = self.menu_item.get('title', '')
+		subtitle = self.menu_item.get('subtitle', '')
 
+		self.menu_item['title'], self.menu_item['subtitle'], self.menu_item['options'] = await asyncio.gather(
+			self.variables.parse(title),
+			self.variables.parse(subtitle),
+			self.__build_options()
+		)
+		self.menu_max_options = len(self.menu_item.get('options', []))
+		self.redisplay_menu()
+
+	async def menu(self, menu_item: dict) -> dict:
+		self.menu_item = menu_item
 		self.menu_index = 0
-		self.menu_max_options = len(options)
-		self.redisplay_menu = lambda: self.__print_menu(options, title, subtitle)
+		self.menu_max_options = len(self.menu_item.get('options', []))
 		self.scroll_up = self.menu_move_up
 		self.scroll_down = self.menu_move_down
 
-		self.__print_menu(options, title, subtitle)
-		future = asyncio.ensure_future(self.await_movement())
+
+		self.redisplay_menu()
+		user_input = asyncio.ensure_future(self.await_movement())
+		var_display = asyncio.ensure_future(self.__load_menu_vars())
 
 		while True:
-			if future.done():
-				await future #so we can also handle
+			if user_input.done():
+				try:
+					await user_input #so we can also handle
+				except Exception as e:
+					if not var_display.done():
+						var_display.cancel()
+					await var_display
+					raise e
 
 				#if this option does anything, we selected it
-				if any(k in options[self.menu_index] for k in ('input', 'action', 'return', 'goto')):
+				this_option = self.menu_item['options'][self.menu_index]
+				if any(k in this_option for k in ('input', 'action', 'return', 'goto')):
 					break
 
 				#Otherwise, continue polling for menu navigation
-				future = asyncio.ensure_future(self.await_movement())
+				user_input = asyncio.ensure_future(self.await_movement())
 
 			await asyncio.sleep(0.05)
 
-		return options[self.menu_index]
+		return self.menu_item['options'][self.menu_index]
 
-	def __build_options(self, menu_item: dict) -> list:
+	async def __build_options(self) -> list:
 		options = []
 
-		for option in menu_item['options']:
-			options += [self.__parse_menu_option(option)]
+		for option in self.menu_item.get('options', []):
+			options += [await self.__parse_menu_option(option)]
 
 		# If there's a template (for dynamic lists), build it and add to options
-		if 'template' in menu_item:
-			var = menu_item['template']['var']
-			value = self.variables.get(var)
+		if 'template' in self.menu_item:
+			var = self.menu_item['template']['var']
+			value = await self.variables.get(var)
 			self.variables.set(var, value)
 			for line in value.split('\n'):
 				self.variables.set('line', line)
 				items = line.split()
 				items += [''] * (10 - len(items))
 				self.variables.set('item', items)
-				for option in menu_item['template']['options']:
-					options += [self.__parse_menu_option(option)]
+				for option in self.menu_item['template']['options']:
+					options += [await self.__parse_menu_option(option)]
 
 		return options
 
-	def __parse_menu_option(self, option: dict) -> dict:
+	async def __parse_menu_option(self, option: dict) -> dict:
 		new_opt = {}
 		for i in option:
 			if type(option[i]) is str:
-				new_opt[i] = self.variables.parse(option[i])
+				new_opt[i] = await self.variables.parse(option[i])
 			elif type(option[i]) is dict:
-				new_opt[i] = self.__parse_menu_option(option[i])
+				new_opt[i] = await self.__parse_menu_option(option[i])
 			else:
 				new_opt[i] = option[i]
 

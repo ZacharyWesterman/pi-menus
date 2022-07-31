@@ -2,14 +2,14 @@
 # -*- coding:utf-8 -*-
 
 import json
-import subprocess
+import asyncio
 
 with open('vars.json', 'r') as fp:
 	__vars_config = json.load(fp)
 
 __variables = {}
 
-def parse(text: str) -> str:
+async def parse(text: str) -> str:
 	global __variables
 	global __vars_config
 
@@ -17,7 +17,7 @@ def parse(text: str) -> str:
 		return text.format(**__variables)
 	except KeyError as ex:
 		for key in ex.args:
-			__variables[key] = get(key)
+			__variables[key] = await get(key)
 
 		result = text.format(**__variables)
 
@@ -27,7 +27,7 @@ def parse(text: str) -> str:
 
 		return result
 
-def get(key: str):
+async def get(key: str):
 	global __variables
 	global __vars_config
 
@@ -39,8 +39,17 @@ def get(key: str):
 			return '{' + key + '}' #will be wrong value, but should be obvious when displayed
 		elif 'get' in __vars_config[key]:
 			try:
-				return subprocess.check_output(__vars_config[key]['get'], shell=True).decode('utf-8').rstrip('\n')
-			except:
+				process = await asyncio.create_subprocess_shell(
+					__vars_config[key]['get'],
+					shell = True,
+					stdout = asyncio.subprocess.PIPE,
+					stderr = asyncio.subprocess.PIPE
+				)
+				stdout, stderr = await process.communicate()
+
+				return stdout.decode('utf-8').rstrip('\n')
+			except Exception as e:
+				print(e)
 				return '{!' + key + '!}'
 		else:
 			return '{' + key + '}'
