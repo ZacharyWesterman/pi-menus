@@ -39,7 +39,6 @@ class Display(DisplayInterface):
 		return 3 # need some spacing on either side of the line
 
 	def display(self) -> None:
-		self.image.save('img.png')
 		self.__display.ShowImage(self.__display.getbuffer(self.image))
 
 	def clear(self) -> None:
