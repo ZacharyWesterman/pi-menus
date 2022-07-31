@@ -168,7 +168,7 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 				if any(k in options[self.menu_index] for k in ('input', 'action', 'return', 'goto')):
 					break
 
-				#Otherwise, redisplay the menu
+				#Otherwise, continue polling for menu navigation
 				future = asyncio.ensure_future(self.await_movement())
 
 			await asyncio.sleep(0.05)
