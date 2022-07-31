@@ -1,4 +1,4 @@
-import SH1106.config as config
+import .config as config
 import RPi.GPIO as GPIO
 import time
 import numpy as np
