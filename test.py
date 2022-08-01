@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.7
+#!/usr/bin/env python3
 
 import display
 import variables
@@ -6,7 +6,8 @@ import asyncio
 
 
 async def main():
-	disp = display.Display(variables)
+	vars = variables.Parser('vars.json')
+	disp = display.Display(vars)
 	try:
 		selected = await disp.menu({
 			'title': 'Software Version',
@@ -22,11 +23,11 @@ async def main():
 			},
 		})
 
-		input = await disp.get()
-		disp.message(input, title='Result')
-		await asyncio.sleep(2)
+		# input = await disp.get()
+		# disp.message(input, title='Result')
+		# await asyncio.sleep(2)
 	except display.CancelInput:
-		pass #User cancelled
+		return #User cancelled
 	except Exception as e:
 		# disp.message(str(e), title='ERROR', subtitle='Unhandled Exception')
 		print(e)

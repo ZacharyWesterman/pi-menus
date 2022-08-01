@@ -1,34 +1,52 @@
 {
 	"network_ssid": {
-		"get": "iw dev | grep ssid | head -1 | xargs | cut -b 6-",
+		"bash": {
+			"get": "iw dev | grep ssid | head -1 | xargs | cut -b 6-",
+			"delim": "\n"
+		},
 		"cache": false
 	},
 
 	"network_list": {
-		"get": "iwlist wlan0 scanning | grep ESSID | grep -v '\"\"' | grep -v '\\x' | sed 's/^[ \\t]*ESSID:\"//' | sed 's/\"$//' | sort | uniq",
+		"get": {
+			"bash": "iwlist wlan0 scanning | grep ESSID | grep -v '\"\"' | grep -v '\\x' | sed 's/^[ \\t]*ESSID:\"//' | sed 's/\"$//' | sort | uniq",
+			"delim": "\n"
+		},
 		"cache": false
 	},
 
 	"device_list": {
-		"get": "nmap -sn \"$(ip route | awk '/default/ {print $3}' | head -1)\"/24 -oG - | grep 'Status: Up'",
+		"get": {
+			"bash": "nmap -sn \"$(ip route | awk '/default/ {print $3}' | head -1)\"/24 -oG - | grep 'Status: Up'",
+			"delim": "\n"
+		},
 		"cache": false
 	},
 
 	"network_device": {
-		"get": "iw dev | grep Interface | head -1 | xargs | cut -b 11-"
+		"get": {
+			"bash": "iw dev | grep Interface | head -1 | xargs | cut -b 11-"
+		}
 	},
 
 	"network_pass": {
-		"set": "ifconfig wlan0 down; sed 's/ssid=\"[^\"]*\"/ssid=\"{line}\"/' /etc/wpa_supplicant/wpa_supplicant.conf | sed 's/psk=\"[^\"]*\"/psk=\"{network_pass}\"/' >tmp; mv tmp /etc/wpa_supplicant/wpa_supplicant.conf; ifconfig wlan0 up; systemctl daemon-reload; systemctl restart dhcpcd; wpa_cli -i wlan0 reconfigure",
+		"set": {
+			"bash": "ifconfig wlan0 down; sed 's/ssid=\"[^\"]*\"/ssid=\"{line}\"/' /etc/wpa_supplicant/wpa_supplicant.conf | sed 's/psk=\"[^\"]*\"/psk=\"{network_pass}\"/' >tmp; mv tmp /etc/wpa_supplicant/wpa_supplicant.conf; ifconfig wlan0 up; systemctl daemon-reload; systemctl restart dhcpcd; wpa_cli -i wlan0 reconfigure"
+		},
 		"unset": [ "network_ssid", "device_list" ]
 	},
 
 	"software_version": {
-		"get": "head -1 < version.txt",
+		"get": {
+			"bash": "head -1 < version.txt"
+		},
 		"cache": false
 	},
 
 	"test_list": {
-		"get": "for i in 0 1 2 3 4 5; do echo \"option $i\"; done"
+		"get": {
+			"bash": "for i in 0 1 2 3 4 5; do echo \"option $i\"; done",
+			"delim": "\n"
+		}
 	}
 }

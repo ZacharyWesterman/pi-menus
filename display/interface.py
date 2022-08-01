@@ -206,12 +206,13 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 		if 'template' in self.menu_item:
 			var = self.menu_item['template']['var']
 			value = await self.variables.get(var)
-			self.variables.set(var, value)
-			for line in value.split('\n'):
-				self.variables.set('line', line)
+			if type(value) is str:
+				value = [value]
+			for line in value:
+				await self.variables.set('line', line)
 				items = line.split()
 				items += [''] * (10 - len(items))
-				self.variables.set('item', items)
+				await self.variables.set('item', items)
 				for option in self.menu_item['template']['options']:
 					options += [await self.__parse_menu_option(option)]
 
