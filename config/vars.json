@@ -38,7 +38,7 @@
 
 	"software_version": {
 		"get": {
-			"bash": "head -1 < version.txt"
+			"bash": "head -1 < config/version.txt"
 		},
 		"cache": false
 	},

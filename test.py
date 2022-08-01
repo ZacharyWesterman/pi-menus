@@ -6,7 +6,7 @@ import asyncio
 
 
 async def main():
-	vars = variables.Parser('vars.json')
+	vars = variables.Parser('config/vars.json')
 	disp = display.Display(vars)
 	try:
 		selected = await disp.menu({
