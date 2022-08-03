@@ -123,7 +123,7 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 
 		self.display()
 
-	def message(self, text: str, *, title: str = '', subtitle: str = '') -> None:
+	def message(self, text: str = '', *, title: str = '', subtitle: str = '') -> None:
 		self.clear()
 		offset = 0
 		if len(title):
@@ -133,11 +133,13 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 			self.put(offset, subtitle, italics = True)
 			offset += self.text_scale()
 
-		if len(subtitle) or len(title):
+		if (len(subtitle) or len(title)) and len(text):
 			self.hline(0, offset, self.max_width())
 			offset += self.line_scale()
 
-		self.put(offset, text)
+		if len(text):
+			self.put(offset, text)
+
 		self.display()
 
 	def menu_move_down(self) -> None:
@@ -179,21 +181,22 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 				try:
 					await user_input #so we can also handle
 				except Exception as e:
-					if not var_display.done():
-						var_display.cancel()
-					await var_display
+					var_display.cancel()
 					raise e
 
 				#if this option does anything, we selected it
-				this_option = self.menu_item['options'][self.menu_index]
-				if any(k in this_option for k in ('input', 'action', 'return', 'goto')):
-					break
+				options = self.menu_item['options']
+				if len(options) > self.menu_index:
+					this_option = options[self.menu_index]
+					if any(k in this_option for k in ('input', 'action', 'return', 'goto')):
+						break
 
 				#Otherwise, continue polling for menu navigation
 				user_input = asyncio.ensure_future(self.await_movement())
 
 			await asyncio.sleep(0.05)
 
+		await var_display
 		return self.menu_item['options'][self.menu_index]
 
 	async def __build_options(self) -> list:

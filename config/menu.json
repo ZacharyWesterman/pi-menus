@@ -1,6 +1,5 @@
 {
 	"main": {
-		"type": "menu",
 		"title": "Main Menu",
 		"options": [
 			{
@@ -15,7 +14,6 @@
 	},
 
 	"network": {
-		"type": "menu",
 		"title": "{network_ssid}",
 		"options": [
 			{
@@ -30,7 +28,6 @@
 	},
 
 	"network_list": {
-		"type": "menu",
 		"title": "Available Networks",
 		"template": {
 			"var": "network_list",
@@ -44,12 +41,10 @@
 					"return": true
 				}
 			]
-		},
-		"options": []
+		}
 	},
 
 	"device_list": {
-		"type": "menu",
 		"title": "Devices on Network",
 		"template": {
 			"var": "device_list",
@@ -64,7 +59,6 @@
 	},
 
 	"software": {
-		"type": "menu",
 		"title": "Version {software_version}",
 		"options": [
 			{
