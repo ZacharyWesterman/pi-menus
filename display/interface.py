@@ -1,6 +1,7 @@
 from enum import Enum
 import abc
 import asyncio
+import copy
 
 class message(Enum):
 	text = 1
@@ -165,7 +166,7 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 		self.redisplay_menu()
 
 	async def menu(self, menu_item: dict) -> dict:
-		self.menu_item = menu_item
+		self.menu_item = copy.deepcopy(menu_item)
 		self.menu_index = 0
 		self.menu_max_options = len(self.menu_item.get('options', []))
 		self.scroll_up = self.menu_move_up

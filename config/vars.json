@@ -43,10 +43,9 @@
 		"cache": false
 	},
 
-	"test_list": {
-		"get": {
-			"bash": "for i in 0 1 2 3 4 5; do echo \"option $i\"; done",
-			"delim": "\n"
+	"fetch_update": {
+		"action": {
+			"bash": "git pull; chown pi:pi .git -R"
 		}
 	}
 }

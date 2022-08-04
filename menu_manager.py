@@ -58,6 +58,11 @@ class Manager():
 
 					await self.variables.set(var_name, value)
 
+				#run specific actions based on the selection
+				if 'action' in selection:
+					self.display.message(title='Processing...', subtitle='Please be patient.')
+					await self.variables.action(selection['action'])
+
 				#move to a new menu
 				if 'goto' in selection:
 					new_menu = selection['goto']
@@ -66,6 +71,9 @@ class Manager():
 
 					menu_stack.append(current_menu)
 					current_menu = new_menu
+
+				if 'return' in selection:
+					raise display.CancelInput
 
 			except display.CancelInput:
 				if len(menu_stack):

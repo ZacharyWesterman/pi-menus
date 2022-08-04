@@ -8,6 +8,10 @@ class FailedVarLoad(Exception):
 	def __init__(self, var_name: str):
 		super().__init__(f'Failed to get usable output from "{var_name}"')
 
+class UnknownVar(Exception):
+	def __init__(self, var_name: str):
+		super().__init__(f'Variable "{var_name}" is undefined')
+
 class Parser:
 	def __init__(self, filename: str = ''):
 		self.__config = {}
@@ -97,6 +101,13 @@ class Parser:
 				return '{' + var_name + '}'
 		else:
 			return self.__vars[var_name]
+
+	async def action(self, var_name: str) -> None:
+		if var_name in self.__config:
+			action = self.__config[var_name].get('action', {})
+			await self.__get_output_of(action)
+		else:
+			raise UnknownVar(var_name)
 
 	async def parse(self, text: str) -> str:
 		try:

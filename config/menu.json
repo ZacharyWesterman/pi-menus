@@ -63,7 +63,7 @@
 		"options": [
 			{
 				"text": "Fetch update",
-				"action": "git pull; chown pi:pi .git -R"
+				"action": "fetch_update"
 			}
 		]
 	}
