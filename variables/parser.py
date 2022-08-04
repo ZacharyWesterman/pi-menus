@@ -98,7 +98,7 @@ class Parser:
 				except FailedVarLoad:
 					return '{!' + var_name + '!}'
 			else:
-				return '{' + var_name + '}'
+				return '{:' + var_name + ':}'
 		else:
 			return self.__vars[var_name]
 
