@@ -1,6 +1,5 @@
 {
 	"main": {
-		"type": "menu",
 		"title": "Main Menu",
 		"options": [
 			{
@@ -10,12 +9,29 @@
 			{
 				"text": "Software Version",
 				"goto": "software"
+			},
+			{
+				"text": "Shut Down",
+				"goto": "shutdown"
+			}
+		]
+	},
+
+	"shutdown": {
+		"title": "Shut Down?",
+		"options": [
+			{
+				"text": "Yes",
+				"action": "shutdown"
+			},
+			{
+				"text": "No",
+				"return": true
 			}
 		]
 	},
 
 	"network": {
-		"type": "menu",
 		"title": "{network_ssid}",
 		"options": [
 			{
@@ -30,7 +46,6 @@
 	},
 
 	"network_list": {
-		"type": "menu",
 		"title": "Available Networks",
 		"template": {
 			"var": "network_list",
@@ -44,12 +59,10 @@
 					"return": true
 				}
 			]
-		},
-		"options": []
+		}
 	},
 
 	"device_list": {
-		"type": "menu",
 		"title": "Devices on Network",
 		"template": {
 			"var": "device_list",
@@ -64,12 +77,11 @@
 	},
 
 	"software": {
-		"type": "menu",
 		"title": "Version {software_version}",
 		"options": [
 			{
 				"text": "Fetch update",
-				"action": "git pull; chown pi:pi .git -R"
+				"action": "fetch_update"
 			}
 		]
 	}
