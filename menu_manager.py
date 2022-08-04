@@ -72,7 +72,7 @@ class Manager():
 					menu_stack.append(current_menu)
 					current_menu = new_menu
 
-				if 'return' in selection:
+				if selection.get('return', False):
 					raise display.CancelInput
 
 			except display.CancelInput:

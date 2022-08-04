@@ -9,6 +9,24 @@
 			{
 				"text": "Software Version",
 				"goto": "software"
+			},
+			{
+				"text": "Shut Down",
+				"goto": "shutdown"
+			}
+		]
+	},
+
+	"shutdown": {
+		"title": "Shut Down?",
+		"options": [
+			{
+				"text": "Yes",
+				"action": "shutdown"
+			},
+			{
+				"text": "No",
+				"return": true
 			}
 		]
 	},

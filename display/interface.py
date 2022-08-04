@@ -172,7 +172,6 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 		self.scroll_up = self.menu_move_up
 		self.scroll_down = self.menu_move_down
 
-
 		self.redisplay_menu()
 		user_input = asyncio.create_task(self.await_movement())
 		var_display = asyncio.create_task(self.__load_menu_vars())

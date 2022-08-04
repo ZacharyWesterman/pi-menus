@@ -47,5 +47,11 @@
 		"action": {
 			"bash": "git pull; chown pi:pi .git -R"
 		}
+	},
+
+	"shutdown": {
+		"action": {
+			"bash": "shutdown now"
+		}
 	}
 }
