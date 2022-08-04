@@ -19,11 +19,11 @@ class Parser:
 		if len(filename):
 			self.load(filename)
 
-	async def __get_output_of(self, command: str): #could return anything
+	async def __get_output_of(self, command: str, *, allow_null: bool = False): #could return anything
 		if isinstance(command, dict):
 			if 'bash' in command:
 				result = await self.__run_bash_cmd(command['bash'])
-				if result == '':
+				if result == '' and not allow_null:
 					raise FailedVarLoad(command['bash'])
 				delim = command.get('delim')
 
@@ -92,7 +92,7 @@ class Parser:
 				return '{?' + var_name + '?}' #var not in config, so can't load it.
 			elif 'get' in self.__config[var_name]:
 				try:
-					result = await self.__get_output_of(self.__config[var_name]['get'])
+					result = await self.__get_output_of(self.__config[var_name]['get'], allow_null=True)
 					await self.set(var_name, result)
 					return result
 				except FailedVarLoad:
