@@ -4,9 +4,7 @@ import asyncio
 
 async def main():
 	manager = menu_manager.Manager()
-
-	while True:
-		await manager.run()
+	await manager.run()
 
 if __name__ == '__main__':
 	asyncio.run(main())
