@@ -173,13 +173,13 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 
 
 		self.redisplay_menu()
-		user_input = asyncio.ensure_future(self.await_movement())
-		var_display = asyncio.ensure_future(self.__load_menu_vars())
+		user_input = asyncio.create_task(self.await_movement())
+		var_display = asyncio.create_task(self.__load_menu_vars())
 
 		while True:
 			if user_input.done():
 				try:
-					await user_input #so we can also handle
+					await user_input
 				except Exception as e:
 					var_display.cancel()
 					raise e
@@ -192,7 +192,7 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 						break
 
 				#Otherwise, continue polling for menu navigation
-				user_input = asyncio.ensure_future(self.await_movement())
+				user_input = asyncio.create_task(self.await_movement())
 
 			await asyncio.sleep(0.05)
 
