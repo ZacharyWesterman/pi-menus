@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-import menu_manager
+import menu
 import asyncio
 
 async def main():
-	manager = menu_manager.Manager()
+	manager = menu.Manager()
 	await manager.run()
 
 if __name__ == '__main__':

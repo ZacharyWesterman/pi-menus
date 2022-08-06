@@ -5,21 +5,7 @@ import traceback
 import display
 import variables
 
-class NoEntryPoint(Exception):
-	def __init__(self):
-		super().__init__('No "main" entry point in menu config!')
-
-class BadMenuReference(Exception):
-	def __init__(self, name: str):
-		super().__init__(f'Unknown menu item "{name}"')
-
-class BadVarName(Exception):
-	def __init__(self, name: str):
-		super().__init__(f'Invalid var name "{name}"')
-
-class BadConfig(Exception):
-	def __init__(self, config_item):
-		super().__init__(f'Bad config {config_item}')
+from .exceptions import *
 
 class Manager():
 	def __init__(self):
@@ -27,10 +13,16 @@ class Manager():
 			self.menu_config = json.load(fp)
 
 		if 'main' not in self.menu_config:
-			raise NoEntryPoint
+			raise NoEntryPoint()
 
-		self.variables = variables.Parser('config/vars.json')
+		self.variables = variables.Parser()
 		self.display = display.Display(self.variables)
+
+	def get_menu_config(self, name: str) -> dict:
+		if name in self.menu_config:
+			return self.menu_config[name]
+		else:
+			raise UnknownMenu(name)
 
 	async def run(self) -> None:
 		current_menu = 'main'

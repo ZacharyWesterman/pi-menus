@@ -3,17 +3,7 @@ import abc
 import asyncio
 import copy
 
-class message(Enum):
-	text = 1
-	password = 2
-
-class CancelInput(Exception):
-	def __init__(self):
-		super().__init__('Unhandled user-input "cancel" action.')
-
-class NotImplemented(Exception):
-	def __init__(self, method):
-		super().__init__(f'{method.__name__} is not implemented.')
+from .exceptions import *
 
 class DisplayInterface(metaclass=abc.ABCMeta):
 	def __init__(self, variable_handler: object):

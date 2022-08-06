@@ -1,23 +1,13 @@
-#!/usr/bin/env python3
-# -*- coding:utf-8 -*-
-
 import json
 import asyncio
 
-class FailedVarLoad(Exception):
-	def __init__(self, var_name: str):
-		super().__init__(f'Failed to get usable output from "{var_name}"')
-
-class UnknownAction(Exception):
-	def __init__(self, var_name: str):
-		super().__init__(f'Action "{var_name}" is undefined')
+from .exceptions import *
 
 class Parser:
-	def __init__(self, filename: str = ''):
+	def __init__(self):
 		self.__config = {}
 		self.__vars = {}
-		if len(filename):
-			self.load(filename)
+		self.load('config/vars.json')
 
 	async def __get_output_of(self, command: str, *, allow_null: bool = False): #could return anything
 		if isinstance(command, dict):
