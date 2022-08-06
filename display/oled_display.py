@@ -8,7 +8,6 @@ import RPi.GPIO as GPIO
 from .SH1106 import SH1106, config, pins
 
 from .oled_keyboard import keyboard
-from .oled_menu import oled_menu
 
 from .interface import DisplayInterface, CancelInput
 

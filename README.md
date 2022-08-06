@@ -1,8 +1,7 @@
 # pi-menus
-quick and simple menu interface for multiple kinds of display/input devices
+Network tools accessible via an oled menu interface.
+This is intended for the RPi Zero W running the latest Raspberry Pi OS
 
-Requirements:
-* sudo apt install nmap network-manager
-* pip3 install pillow smbus numpy==1.21.3 spidev RPi.GPIO
+Before installing, make sure the Pi's SPI interface is enabled.
 
-Note that numpy **must be version 1.21.3**! In version 1.21.5 (on the Pi Zero W), running `import numpy` gives an `Illegal Instruction` crash message.
+To install, run `./install.sh`.
