@@ -17,5 +17,5 @@ async def fetch_update(variables: object) -> None:
 			stderr = stderr.decode().rstrip('\n')
 			raise Exception(f'Failed to fetch update:\n{stderr}')
 
-	await run_cmd('git pull')
+	await run_cmd('git pull --ff-only')
 	await run_cmd('chown pi:pi .git * -R')
