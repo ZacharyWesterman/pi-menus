@@ -67,13 +67,7 @@ class Parser:
 
 			if 'set' in self.__config[var_name]:
 				setcmd = self.__config[var_name]['set']
-				if isinstance(setcmd, dict):
-					if 'bash' in setcmd:
-						result = await self.__get_output_of(setcmd['bash'])
-					else:
-						raise FailedVarLoad(setcmd)
-				else:
-					raise FailedVarLoad(setcmd)
+				result = await self.__get_output_of(setcmd, allow_null=True)
 
 	async def get(self, var_name: str, default = None): #This could return anything!
 		#Don't keep any vars that are not cached!
@@ -98,7 +92,7 @@ class Parser:
 
 	async def action(self, var_name: str) -> None:
 		if var_name in self.__config and 'action' in self.__config[var_name]:
-			await self.__get_output_of(self.__config[var_name]['action'])
+			await self.__get_output_of(self.__config[var_name]['action'], allow_null=True)
 		else:
 			raise UnknownAction(var_name)
 
