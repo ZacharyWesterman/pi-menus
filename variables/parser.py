@@ -10,7 +10,7 @@ class Parser:
 		self.__vars = {}
 		self.load('config/vars.json')
 
-	async def __get_output_of(self, command: str, *, allow_null: bool = False): #could return anything
+	async def __get_output_of(self, command: str, *, allow_null: bool = False, display: object = None): #could return anything
 		if isinstance(command, dict):
 			if 'bash' in command:
 				result = await self.__run_bash_cmd(command['bash'])
