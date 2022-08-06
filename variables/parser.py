@@ -2,6 +2,7 @@ import json
 import asyncio
 
 from .exceptions import *
+import behaviors
 
 class Parser:
 	def __init__(self):
@@ -18,10 +19,12 @@ class Parser:
 				delim = command.get('delim')
 
 				return result if delim is None else result.split(delim)
-			else:
-				raise FailedVarLoad(command)
+			elif 'py' in command:
+				behavior = behaviors.get(command['py'])
+				return behavior(self)
 		else:
-			raise FailedVarLoad(command)
+			behavior = behaviors.get(command)
+			return behavior(self)
 
 	async def __run_bash_cmd(self, command: str) -> str:
 		process = await asyncio.create_subprocess_shell(
