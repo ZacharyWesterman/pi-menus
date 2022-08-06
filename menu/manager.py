@@ -76,9 +76,11 @@ class Manager():
 						raise display.CancelInput
 
 				elif menu_item['type'] == 'message':
-					title = menu_item.get('title', '')
-					subtitle = menu_item.get('subtitle', '')
-					text = menu_item.get('text', '')
+					self.display.message(text='Please be patient.', title='Loading...')
+
+					title = await self.variables.parse(menu_item.get('title', ''))
+					subtitle = await self.variables.parse(menu_item.get('subtitle', ''))
+					text = await self.variables.parse(menu_item.get('text', ''))
 					self.display.message(text=text, title=title, subtitle=subtitle)
 
 					await self.display.await_movement()
