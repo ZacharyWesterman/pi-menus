@@ -30,7 +30,17 @@ class Manager():
 		menu_stack = []
 
 		while True:
-			menu_item = self.menu_config[current_menu]
+			#If we hit an invalid menu, show the error, then go back
+			try:
+				menu_item = self.get_menu_config(current_menu)
+			except UnknownMenu as e:
+				self.display.message(str(e), title='Unhandled Exception')
+				await asyncio.sleep(2)
+				if len(menu_stack):
+					current_menu = menu_stack.pop(-1)
+					continue
+				else:
+					break #If user exited the last menu, return
 
 			try:
 				selection = await self.display.menu(menu_item)
@@ -57,12 +67,8 @@ class Manager():
 
 				#move to a new menu
 				if 'goto' in selection:
-					new_menu = selection['goto']
-					if new_menu not in self.menu_config:
-						raise BadMenuReference
-
 					menu_stack.append(current_menu)
-					current_menu = new_menu
+					current_menu = selection['goto']
 
 				if selection.get('return', False):
 					raise display.CancelInput

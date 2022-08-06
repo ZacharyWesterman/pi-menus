@@ -2,10 +2,6 @@ class NoEntryPoint(Exception):
 	def __init__(self):
 		super().__init__('No "main" entry point in menu config!')
 
-class BadMenuReference(Exception):
-	def __init__(self, name: str):
-		super().__init__(f'Unknown menu item "{name}"')
-
 class BadVarName(Exception):
 	def __init__(self, name: str):
 		super().__init__(f'Invalid var name "{name}"')
