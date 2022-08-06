@@ -102,11 +102,13 @@ class Parser:
 			raise UnknownAction(var_name)
 
 	async def parse(self, text: str) -> str:
-		try:
-			return text.format(**self.__vars)
-		except KeyError as ex:
-			failed_vars = self.__vars
-			for var_name in ex.args:
-				failed_vars[var_name] = await self.get(var_name)
+		failed_vars = {}
 
-			return text.format(**failed_vars)
+		for i in range(20): #DON'T loop forever!
+			try:
+				return text.format(**self.__vars, **failed_vars)
+			except KeyError as ex:
+				for var_name in ex.args:
+					result = await self.get(var_name)
+					if var_name not in self.__vars:
+						failed_vars[var_name] = result
