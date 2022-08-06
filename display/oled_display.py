@@ -111,9 +111,28 @@ class Display(DisplayInterface):
 			(x_pos + 1, y_pos + height)
 		], fill=0)
 
+
 	async def await_movement(self) -> None:
 		self.menu_failed = False
 		self.menu_exited = False
+		self.display_sleeping = True
+
+		def toggle_display_sleep(_ = None):
+			self.display_sleeping = not self.display_sleeping
+			if self.display_sleeping:
+				GPIO.remove_event_detect(pins.KEY_LEFT)
+				GPIO.remove_event_detect(pins.KEY_RIGHT)
+				GPIO.remove_event_detect(pins.KEY_UP)
+				GPIO.remove_event_detect(pins.KEY_DOWN)
+				GPIO.remove_event_detect(pins.KEY_PRESS)
+				self.clear()
+			else:
+				GPIO.add_event_detect(pins.KEY_LEFT, GPIO.FALLING, callback=menu_fail, bouncetime=200)
+				GPIO.add_event_detect(pins.KEY_RIGHT, GPIO.FALLING, callback=menu_exit, bouncetime=200)
+				GPIO.add_event_detect(pins.KEY_UP, GPIO.FALLING, callback=lambda _: self.scroll_up(), bouncetime=200)
+				GPIO.add_event_detect(pins.KEY_DOWN, GPIO.FALLING, callback=lambda _: self.scroll_down(), bouncetime=200)
+				GPIO.add_event_detect(pins.KEY_PRESS, GPIO.FALLING, callback=menu_exit, bouncetime=250)
+				self.display()
 
 		def menu_fail(_ = None):
 			self.menu_failed = True
@@ -121,20 +140,14 @@ class Display(DisplayInterface):
 		def menu_exit(_ = None):
 			self.menu_exited = True
 
-		GPIO.add_event_detect(pins.KEY_LEFT, GPIO.FALLING, callback=menu_fail, bouncetime=200)
-		GPIO.add_event_detect(pins.KEY_RIGHT, GPIO.FALLING, callback=menu_exit, bouncetime=200)
-		GPIO.add_event_detect(pins.KEY_UP, GPIO.FALLING, callback=lambda _: self.scroll_up(), bouncetime=200)
-		GPIO.add_event_detect(pins.KEY_DOWN, GPIO.FALLING, callback=lambda _: self.scroll_down(), bouncetime=200)
-		GPIO.add_event_detect(pins.KEY_PRESS, GPIO.FALLING, callback=menu_exit, bouncetime=250)
+		toggle_display_sleep()
+		GPIO.add_event_detect(pins.KEY1, GPIO.FALLING, callback=toggle_display_sleep, bouncetime=200)
 
 		while not (self.menu_exited or self.menu_failed):
 			await asyncio.sleep(0.1)
 
-		GPIO.remove_event_detect(pins.KEY_LEFT)
-		GPIO.remove_event_detect(pins.KEY_RIGHT)
-		GPIO.remove_event_detect(pins.KEY_UP)
-		GPIO.remove_event_detect(pins.KEY_DOWN)
-		GPIO.remove_event_detect(pins.KEY_PRESS)
+		toggle_display_sleep()
+		GPIO.remove_event_detect(pins.KEY1)
 
 		if self.menu_failed:
 			raise CancelInput
