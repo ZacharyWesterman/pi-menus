@@ -1,6 +1,7 @@
 from behaviors import register
 
 import asyncio
+from time import sleep
 
 @register('shutdown')
 async def shutdown_action(display: object, **args) -> None:
@@ -12,3 +13,5 @@ async def shutdown_action(display: object, **args) -> None:
 		stderr = asyncio.subprocess.PIPE
 	)
 	stdout, stderr = await process.communicate()
+
+	time.sleep(20) #we WANT this to be blocking
