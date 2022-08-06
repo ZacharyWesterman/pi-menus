@@ -35,12 +35,16 @@
 		"title": "{network_ssid}",
 		"options": [
 			{
-				"text": "Change Network",
-				"goto": "network_list"
+				"text": "Device Info",
+				"goto": "device_info"
 			},
 			{
 				"text": "List Devices",
 				"goto": "device_list"
+			},
+			{
+				"text": "Change Network",
+				"goto": "network_list"
 			}
 		]
 	},
@@ -74,6 +78,11 @@
 			]
 		},
 		"options": []
+	},
+
+	"device_info": {
+		"title": "Device Info",
+		"subtitle": "IP: {ip_address}\nID: {hostname}"
 	},
 
 	"software": {

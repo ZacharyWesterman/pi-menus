@@ -48,6 +48,9 @@
 		}
 	},
 
+	"ip_address": { "get": "get_ip_address" },
+	"hostname": { "get": "get_hostname" },
+
 	"shutdown": {
 		"action": {
 			"bash": "shutdown now"
