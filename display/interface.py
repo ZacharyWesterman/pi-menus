@@ -133,6 +133,9 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 
 		self.display()
 
+	def menu_position(self) -> int:
+		return self.menu_index
+
 	def menu_move_down(self) -> None:
 		if self.menu_index < (self.menu_max_options - 1):
 			self.menu_index += 1
@@ -155,10 +158,11 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 		self.menu_max_options = len(self.menu_item.get('options', []))
 		self.redisplay_menu()
 
-	async def menu(self, menu_item: dict) -> dict:
+	async def menu(self, menu_item: dict, menu_index: int = 0) -> dict:
 		self.menu_item = copy.deepcopy(menu_item)
-		self.menu_index = 0
 		self.menu_max_options = len(self.menu_item.get('options', []))
+		self.menu_index = max(menu_index, 0)
+		self.menu_index = min(self.menu_index, self.menu_max_options - 1)
 		self.scroll_up = self.menu_move_up
 		self.scroll_down = self.menu_move_down
 

@@ -26,6 +26,7 @@ class Manager():
 
 	async def run(self) -> None:
 		current_menu = 'main'
+		current_index = 0
 
 		menu_stack = []
 
@@ -37,13 +38,13 @@ class Manager():
 				self.display.message(str(e), title='Unhandled Exception')
 				await asyncio.sleep(2)
 				if len(menu_stack):
-					current_menu = menu_stack.pop(-1)
+					current_menu, current_index = menu_stack.pop(-1)
 					continue
 				else:
 					break #If user exited the last menu, return
 
 			try:
-				selection = await self.display.menu(menu_item)
+				selection = await self.display.menu(menu_item, current_index)
 				#get a value and set a var based on that
 				if 'input' in selection:
 					cfg = selection['input']
@@ -67,7 +68,7 @@ class Manager():
 
 				#move to a new menu
 				if 'goto' in selection:
-					menu_stack.append(current_menu)
+					menu_stack.append((current_menu, self.display.menu_position()))
 					current_menu = selection['goto']
 
 				if selection.get('return', False):
@@ -75,7 +76,7 @@ class Manager():
 
 			except display.CancelInput:
 				if len(menu_stack):
-					current_menu = menu_stack.pop(-1)
+					current_menu, current_index = menu_stack.pop(-1)
 				else:
 					break #If user exited the last menu, return
 			except Exception as e:
