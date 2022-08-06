@@ -1,7 +1,7 @@
 from behaviors import register
 
 import asyncio
-from time import sleep
+import time
 
 @register('shutdown')
 async def shutdown_action(display: object, **args) -> None:
