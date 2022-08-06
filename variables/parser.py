@@ -75,23 +75,24 @@ class Parser:
 				else:
 					raise FailedVarLoad(setcmd)
 
-	async def get(self, var_name: str): #This could return anything!
+	async def get(self, var_name: str, default = None): #This could return anything!
 		#Don't keep any vars that are not cached!
 		if (var_name in self.__vars) and (var_name in self.__config) and self.__config[var_name].get('cache', False):
 			self.unset(var_name)
 
 		if var_name not in self.__vars:
 			if var_name not in self.__config:
-				return '{?' + var_name + '?}' #var not in config, so can't load it.
+				raise UnknownVar(var_name) #var not in config, so can't load it.
 			elif 'get' in self.__config[var_name]:
-				try:
-					result = await self.__get_output_of(self.__config[var_name]['get'], allow_null=True)
-					await self.set(var_name, result)
-					return result
-				except FailedVarLoad:
-					return '{!' + var_name + '!}'
+				result = await self.__get_output_of(self.__config[var_name]['get'], allow_null=True)
+				await self.set(var_name, result)
+				return result
+			elif 'default' in self.__config[var_name]:
+				default = self.__config[var_name]['default']
+				await self.set(var_name, default)
+				return default
 			else:
-				return '{:' + var_name + ':}'
+				raise CannotLoadVar(var_name)
 		else:
 			return self.__vars[var_name]
 
