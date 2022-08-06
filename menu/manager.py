@@ -44,34 +44,44 @@ class Manager():
 					break #If user exited the last menu, return
 
 			try:
-				selection = await self.display.menu(menu_item, current_index)
-				#get a value and set a var based on that
-				if 'input' in selection:
-					cfg = selection['input']
-					if type(cfg) is not dict:
-						raise BadConfig(cfg)
+				if menu_item['type'] == 'menu':
+					selection = await self.display.menu(menu_item, current_index)
+					#get a value and set a var based on that
+					if 'input' in selection:
+						cfg = selection['input']
+						if type(cfg) is not dict:
+							raise BadConfig(cfg)
 
-					is_password = cfg.get('password', False)
-					value = await self.display.get(is_password)
-					self.display.message(title='Loading...', subtitle='Please be patient.')
+						is_password = cfg.get('password', False)
+						value = await self.display.get(is_password)
+						self.display.message(title='Loading...', subtitle='Please be patient.')
 
-					var_name = cfg.get('var', '')
-					if var_name == '':
-						raise BadVarName(var_name)
+						var_name = cfg.get('var', '')
+						if var_name == '':
+							raise BadVarName(var_name)
 
-					await self.variables.set(var_name, value)
+						await self.variables.set(var_name, value)
 
-				#run specific actions based on the selection
-				if 'action' in selection:
-					self.display.message(title='Processing...', subtitle='Please be patient.')
-					await self.variables.action(selection['action'])
+					#run specific actions based on the selection
+					if 'action' in selection:
+						self.display.message(title='Processing...', subtitle='Please be patient.')
+						await self.variables.action(selection['action'])
 
-				#move to a new menu
-				if 'goto' in selection:
-					menu_stack.append((current_menu, self.display.menu_position()))
-					current_menu = selection['goto']
+					#move to a new menu
+					if 'goto' in selection:
+						menu_stack.append((current_menu, self.display.menu_position()))
+						current_menu = selection['goto']
 
-				if selection.get('return', False):
+					if selection.get('return', False):
+						raise display.CancelInput
+
+				elif menu_item['type'] == 'message':
+					title = menu_item.get('title', '')
+					subtitle = menu_item.get('subtitle', '')
+					text = menu_item.get('text', '')
+					self.display.message(text=text, title=title, subtitle=subtitle)
+
+					await self.display.await_movement()
 					raise display.CancelInput
 
 			except display.CancelInput:

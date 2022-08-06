@@ -1,5 +1,6 @@
 {
 	"main": {
+		"type": "menu",
 		"title": "Main Menu",
 		"options": [
 			{
@@ -18,6 +19,7 @@
 	},
 
 	"shutdown": {
+		"type": "menu",
 		"title": "Shut Down?",
 		"options": [
 			{
@@ -32,6 +34,7 @@
 	},
 
 	"network": {
+		"type": "menu",
 		"title": "{network_ssid}",
 		"options": [
 			{
@@ -50,6 +53,7 @@
 	},
 
 	"network_list": {
+		"type": "menu",
 		"title": "Available Networks",
 		"template": {
 			"var": "network_list",
@@ -67,6 +71,7 @@
 	},
 
 	"device_list": {
+		"type": "menu",
 		"title": "Devices on Network",
 		"template": {
 			"var": "device_list",
@@ -81,11 +86,13 @@
 	},
 
 	"device_info": {
+		"type": "message",
 		"title": "Device Info",
-		"subtitle": "IP: {ip_address}\nID: {hostname}"
+		"text": "IP: {ip_address}\nID: {hostname}"
 	},
 
 	"software": {
+		"type": "menu",
 		"title": "Version {software_version}",
 		"options": [
 			{
