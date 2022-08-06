@@ -21,10 +21,10 @@ class Parser:
 				return result if delim is None else result.split(delim)
 			elif 'py' in command:
 				behavior = behaviors.get(command['py'])
-				return behavior(self)
+				return behavior(variables=self)
 		else:
 			behavior = behaviors.get(command)
-			return behavior(self)
+			return behavior(variables=self)
 
 	async def __run_bash_cmd(self, command: str) -> str:
 		process = await asyncio.create_subprocess_shell(
