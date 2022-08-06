@@ -44,7 +44,7 @@
 
 	"fetch_update": {
 		"action": {
-			"bash": "git pull; chown pi:pi .git * -R"
+			"py": "fetch_update"
 		}
 	},
 
