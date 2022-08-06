@@ -21,7 +21,7 @@ class Parser:
 				return result if delim is None else result.split(delim)
 			elif 'py' in command:
 				behavior = behaviors.get(command['py'])
-				return await behavior(variables=self)
+				return await behavior(variables=self, display=display)
 		else:
 			behavior = behaviors.get(command)
 			return await behavior(variables=self)
@@ -90,9 +90,9 @@ class Parser:
 		else:
 			return self.__vars[var_name]
 
-	async def action(self, var_name: str) -> None:
+	async def action(self, var_name: str, *, display: object = None) -> None:
 		if var_name in self.__config and 'action' in self.__config[var_name]:
-			await self.__get_output_of(self.__config[var_name]['action'], allow_null=True)
+			await self.__get_output_of(self.__config[var_name]['action'], allow_null=True, display=display)
 		else:
 			raise UnknownAction(var_name)
 

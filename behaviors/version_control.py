@@ -3,7 +3,7 @@ from behaviors import register
 import asyncio
 
 @register('fetch_update')
-async def fetch_update(variables: object) -> None:
+async def fetch_update(variables: object, **args) -> None:
 	async def run_cmd(cmd: str):
 		process = await asyncio.create_subprocess_shell(
 			cmd,

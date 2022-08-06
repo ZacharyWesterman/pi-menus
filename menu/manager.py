@@ -65,7 +65,7 @@ class Manager():
 					#run specific actions based on the selection
 					if 'action' in selection:
 						self.display.message(title='Processing...', subtitle='Please be patient.')
-						await self.variables.action(selection['action'])
+						await self.variables.action(selection['action'], display=self.display)
 
 					#move to a new menu
 					if 'goto' in selection:

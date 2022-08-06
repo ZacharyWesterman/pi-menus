@@ -53,7 +53,7 @@
 
 	"shutdown": {
 		"action": {
-			"bash": "shutdown now"
+			"py": "shutdown"
 		}
 	}
 }
