@@ -39,6 +39,10 @@ class Display(DisplayInterface):
 	def display(self) -> None:
 		self.__display.ShowImage(self.__display.getbuffer(self.image))
 
+	def display_nothing(self) -> None:
+		blank_image = Image.new('1', (self.max_width(), self.max_height()), 'WHITE')
+		self.__display.ShowImage(self.__display.getbuffer(blank_image))
+
 	def clear(self) -> None:
 		self.image = Image.new('1', (self.max_width(), self.max_height()), 'WHITE')
 		self.draw = ImageDraw.Draw(self.image)
@@ -125,7 +129,7 @@ class Display(DisplayInterface):
 				GPIO.remove_event_detect(pins.KEY_UP)
 				GPIO.remove_event_detect(pins.KEY_DOWN)
 				GPIO.remove_event_detect(pins.KEY_PRESS)
-				self.clear()
+				self.display_nothing()
 			else:
 				GPIO.add_event_detect(pins.KEY_LEFT, GPIO.FALLING, callback=menu_fail, bouncetime=200)
 				GPIO.add_event_detect(pins.KEY_RIGHT, GPIO.FALLING, callback=menu_exit, bouncetime=200)
