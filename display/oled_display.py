@@ -39,7 +39,7 @@ class Display(DisplayInterface):
 
 	async def display(self) -> None:
 		while self.__in_display:
-			await asyncio.sleep()
+			await asyncio.sleep(0)
 
 		self.__in_display = True
 		self.__display.ShowImage(self.__display.getbuffer(self.image))
