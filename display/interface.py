@@ -109,8 +109,8 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 
 			index += scale
 
-		if total_options > max_displayable_options:
-			self.menu_scrollbar(offset, max_displayable_options)
+		# if total_options > max_displayable_options:
+		# 	self.menu_scrollbar(offset, max_displayable_options)
 
 		await self.display()
 
