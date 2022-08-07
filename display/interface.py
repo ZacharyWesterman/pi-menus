@@ -139,12 +139,12 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 	async def menu_move_down(self) -> None:
 		if self.menu_index < (self.menu_max_options - 1):
 			self.menu_index += 1
-			self.redisplay_menu()
+			await self.redisplay_menu()
 
 	async def menu_move_up(self) -> None:
 		if self.menu_index > 0:
 			self.menu_index -= 1
-			self.redisplay_menu()
+			await self.redisplay_menu()
 
 	async def __load_menu_vars(self) -> None:
 		title = self.menu_item.get('title', '')
