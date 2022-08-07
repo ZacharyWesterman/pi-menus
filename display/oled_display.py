@@ -139,8 +139,8 @@ class Display(DisplayInterface):
 			else:
 				GPIO.add_event_detect(pins.KEY_LEFT, GPIO.FALLING, callback=menu_fail, bouncetime=200)
 				GPIO.add_event_detect(pins.KEY_RIGHT, GPIO.FALLING, callback=menu_exit, bouncetime=200)
-				GPIO.add_event_detect(pins.KEY_UP, GPIO.FALLING, callback=lambda _: asyncio.run(self.scroll_up()), bouncetime=200)
-				GPIO.add_event_detect(pins.KEY_DOWN, GPIO.FALLING, callback=lambda _: asyncio.run(self.scroll_down()), bouncetime=200)
+				GPIO.add_event_detect(pins.KEY_UP, GPIO.FALLING, callback=lambda _: asyncio.run(self.menu_move_up()), bouncetime=200)
+				GPIO.add_event_detect(pins.KEY_DOWN, GPIO.FALLING, callback=lambda _: asyncio.run(self.menu_move_down()), bouncetime=200)
 				GPIO.add_event_detect(pins.KEY_PRESS, GPIO.FALLING, callback=menu_exit, bouncetime=250)
 				await self.display()
 
