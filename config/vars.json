@@ -50,7 +50,7 @@
 
 	"ip_address": {
 		"get": {
-			"bash": "ip address show dev wlan0 | grep 'inet ' | tr / ' ' | awk '{{print $2}'"
+			"bash": "ip address show dev wlan0 | grep 'inet ' | tr / ' ' | awk '{{print $2}}'"
 		}
 	},
 
