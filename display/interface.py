@@ -30,7 +30,7 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 		pass
 
 	@abc.abstractmethod
-	def display(self) -> None:
+	async def display(self) -> None:
 		pass
 
 	@abc.abstractmethod
@@ -112,7 +112,7 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 		if total_options > max_displayable_options:
 			self.menu_scrollbar(offset, max_displayable_options)
 
-		self.display()
+		await self.display()
 
 	def message(self, text: str = '', *, title: str = '', subtitle: str = '') -> None:
 		self.clear()
@@ -131,7 +131,7 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 		if len(text):
 			self.put(offset, text)
 
-		self.display()
+		await self.display()
 
 	def menu_position(self) -> int:
 		return self.menu_index
