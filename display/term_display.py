@@ -117,9 +117,9 @@ class Display(DisplayInterface):
 			elif c[0] == 27: # Escape characters
 				#Navigate menu
 				if c[2] == 65:
-					self.scroll_up()
+					await self.menu_move_up()
 				elif c[2] == 66:
-					self.scroll_down()
+					await self.menu_move_down()
 				elif c[2] == 67:
 					return #An option has been selected
 				elif c[2] == 68:
