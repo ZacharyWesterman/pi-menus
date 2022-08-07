@@ -35,7 +35,7 @@ class Display(DisplayInterface):
 	def line_scale(self) -> int:
 		return 1
 
-	def display(self) -> None:
+	async def display(self) -> None:
 		self.__terminal.refresh()
 
 	def clear(self) -> None:

@@ -20,6 +20,7 @@ class Display(DisplayInterface):
 		self.__display.clear()
 		self.scale = 11
 		self.__font = ImageFont.load_default()
+		self.__in_display = False
 
 	def __del__(self):
 		self.__display.clear()
@@ -36,10 +37,15 @@ class Display(DisplayInterface):
 	def line_scale(self) -> int:
 		return 3 # need some spacing on either side of the line
 
-	def display(self) -> None:
-		self.__display.ShowImage(self.__display.getbuffer(self.image))
+	async def display(self) -> None:
+		while self.__in_display:
+			asyncio.sleep()
 
-	def display_nothing(self) -> None:
+		self.__in_display = True
+		self.__display.ShowImage(self.__display.getbuffer(self.image))
+		self.__in_display = False
+
+	async def display_nothing(self) -> None:
 		blank_image = Image.new('1', (self.max_width(), self.max_height()), 'WHITE')
 		self.__display.ShowImage(self.__display.getbuffer(blank_image))
 
@@ -129,14 +135,14 @@ class Display(DisplayInterface):
 				GPIO.remove_event_detect(pins.KEY_UP)
 				GPIO.remove_event_detect(pins.KEY_DOWN)
 				GPIO.remove_event_detect(pins.KEY_PRESS)
-				self.display_nothing()
+				await self.display_nothing()
 			else:
 				GPIO.add_event_detect(pins.KEY_LEFT, GPIO.FALLING, callback=menu_fail, bouncetime=200)
 				GPIO.add_event_detect(pins.KEY_RIGHT, GPIO.FALLING, callback=menu_exit, bouncetime=200)
 				GPIO.add_event_detect(pins.KEY_UP, GPIO.FALLING, callback=lambda _: self.scroll_up(), bouncetime=200)
 				GPIO.add_event_detect(pins.KEY_DOWN, GPIO.FALLING, callback=lambda _: self.scroll_down(), bouncetime=200)
 				GPIO.add_event_detect(pins.KEY_PRESS, GPIO.FALLING, callback=menu_exit, bouncetime=250)
-				self.display()
+				await self.display()
 
 		def menu_fail(_ = None):
 			self.menu_failed = True
