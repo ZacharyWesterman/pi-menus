@@ -35,7 +35,7 @@ class Manager():
 			try:
 				menu_item = self.get_menu_config(current_menu)
 			except UnknownMenu as e:
-				self.display.message(str(e), title='Unhandled Exception')
+				await self.display.message(str(e), title='Unhandled Exception')
 				await asyncio.sleep(2)
 				if len(menu_stack):
 					current_menu, current_index = menu_stack.pop(-1)
@@ -54,7 +54,7 @@ class Manager():
 
 						is_password = cfg.get('password', False)
 						value = await self.display.get(is_password)
-						self.display.message(title='Loading...', subtitle='Please be patient.')
+						await self.display.message(title='Loading...', subtitle='Please be patient.')
 
 						var_name = cfg.get('var', '')
 						if var_name == '':
@@ -64,7 +64,7 @@ class Manager():
 
 					#run specific actions based on the selection
 					if 'action' in selection:
-						self.display.message(title='Processing...', subtitle='Please be patient.')
+						await self.display.message(title='Processing...', subtitle='Please be patient.')
 						await self.variables.action(selection['action'], display=self.display)
 
 					#move to a new menu
@@ -76,12 +76,12 @@ class Manager():
 						raise display.CancelInput
 
 				elif menu_item['type'] == 'message':
-					self.display.message(text='Please be patient.', title='Loading...')
+					await self.display.message(text='Please be patient.', title='Loading...')
 
 					title = await self.variables.parse(menu_item.get('title', ''))
 					subtitle = await self.variables.parse(menu_item.get('subtitle', ''))
 					text = await self.variables.parse(menu_item.get('text', ''))
-					self.display.message(text=text, title=title, subtitle=subtitle)
+					await self.display.message(text=text, title=title, subtitle=subtitle)
 
 					await self.display.await_movement()
 					raise display.CancelInput
@@ -92,7 +92,7 @@ class Manager():
 				else:
 					break #If user exited the last menu, return
 			except Exception as e:
-				self.display.message(str(e), title='Unhandled Exception')
+				await self.display.message(str(e), title='Unhandled Exception')
 				await asyncio.sleep(2)
 
 		#do any cleanup here

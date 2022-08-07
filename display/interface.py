@@ -63,7 +63,7 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 
 	# Below this comment, no more methods need to be implemented by child classes.
 
-	def redisplay_menu(self) -> None:
+	async def redisplay_menu(self) -> None:
 		title = self.menu_item.get('title', '')
 		subtitle = self.menu_item.get('subtitle', '')
 		options = self.menu_item.get('options', [])
@@ -114,7 +114,7 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 
 		await self.display()
 
-	def message(self, text: str = '', *, title: str = '', subtitle: str = '') -> None:
+	async def message(self, text: str = '', *, title: str = '', subtitle: str = '') -> None:
 		self.clear()
 		offset = 0
 		if len(title):
@@ -136,12 +136,12 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 	def menu_position(self) -> int:
 		return self.menu_index
 
-	def menu_move_down(self) -> None:
+	async def menu_move_down(self) -> None:
 		if self.menu_index < (self.menu_max_options - 1):
 			self.menu_index += 1
 			self.redisplay_menu()
 
-	def menu_move_up(self) -> None:
+	async def menu_move_up(self) -> None:
 		if self.menu_index > 0:
 			self.menu_index -= 1
 			self.redisplay_menu()
@@ -156,17 +156,15 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 			self.__build_options()
 		)
 		self.menu_max_options = len(self.menu_item.get('options', []))
-		self.redisplay_menu()
+		await self.redisplay_menu()
 
 	async def menu(self, menu_item: dict, menu_index: int = 0) -> dict:
 		self.menu_item = copy.deepcopy(menu_item)
 		self.menu_max_options = len(self.menu_item.get('options', []))
 		self.menu_index = max(menu_index, 0)
 		self.menu_index = min(self.menu_index, self.menu_max_options - 1)
-		self.scroll_up = self.menu_move_up
-		self.scroll_down = self.menu_move_down
 
-		self.redisplay_menu()
+		await self.redisplay_menu()
 		user_input = asyncio.create_task(self.await_movement())
 		var_display = asyncio.create_task(self.__load_menu_vars())
 

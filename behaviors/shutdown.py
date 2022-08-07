@@ -5,7 +5,7 @@ import time
 
 @register('shutdown')
 async def shutdown_action(display: object, **args) -> None:
-	display.message(title='Shutting down...')
+	await display.message(title='Shutting down...')
 	process = await asyncio.create_subprocess_shell(
 		'shutdown now',
 		shell = True,
