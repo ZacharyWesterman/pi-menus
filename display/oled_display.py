@@ -127,7 +127,7 @@ class Display(DisplayInterface):
 		self.menu_exited = False
 		self.display_sleeping = True
 
-		def toggle_display_sleep(_ = None):
+		async def toggle_display_sleep():
 			self.display_sleeping = not self.display_sleeping
 			if self.display_sleeping:
 				GPIO.remove_event_detect(pins.KEY_LEFT)
@@ -150,13 +150,13 @@ class Display(DisplayInterface):
 		def menu_exit(_ = None):
 			self.menu_exited = True
 
-		toggle_display_sleep()
-		GPIO.add_event_detect(pins.KEY1, GPIO.FALLING, callback=toggle_display_sleep, bouncetime=200)
+		await toggle_display_sleep()
+		GPIO.add_event_detect(pins.KEY1, GPIO.FALLING, callback=lambda _: asyncio.run(_toggle_display_sleep()), bouncetime=200)
 
 		while not (self.menu_exited or self.menu_failed):
 			await asyncio.sleep(0.1)
 
-		toggle_display_sleep()
+		await toggle_display_sleep()
 		GPIO.remove_event_detect(pins.KEY1)
 
 		if self.menu_failed:
