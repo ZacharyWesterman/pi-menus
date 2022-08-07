@@ -2,8 +2,7 @@
 	"network_ssid": {
 		"get": {
 			"bash": "iw dev | grep ssid | head -1 | xargs | cut -b 6-"
-		},
-		"cache": false
+		}
 	},
 
 	"network_list": {
@@ -32,14 +31,13 @@
 		"set": {
 			"bash": "ifconfig wlan0 down; sed 's/ssid=\"[^\"]*\"/ssid=\"{line}\"/' /etc/wpa_supplicant/wpa_supplicant.conf | sed 's/psk=\"[^\"]*\"/psk=\"{network_pass}\"/' >tmp; mv tmp /etc/wpa_supplicant/wpa_supplicant.conf; ifconfig wlan0 up; systemctl daemon-reload; systemctl restart dhcpcd; wpa_cli -i wlan0 reconfigure"
 		},
-		"unset": [ "network_ssid", "device_list" ]
+		"unset": [ "network_ssid", "device_list", "ip_address" ]
 	},
 
 	"software_version": {
 		"get": {
 			"bash": "head -1 < config/version.txt"
-		},
-		"cache": false
+		}
 	},
 
 	"fetch_update": {
