@@ -6,7 +6,10 @@ import os
 
 async def main():
 	manager = menu.Manager()
-	await manager.run()
+	try:
+		await manager.run()
+	except KeyboardInterrupt:
+		pass #exit gracefully
 
 if __name__ == '__main__':
 	os.chdir(str(Path(__file__).parent)) #Make sure working dir is always in the project root
