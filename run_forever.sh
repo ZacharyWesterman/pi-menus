@@ -6,6 +6,7 @@
 
 terminate() {
 	kill $process_id
+	exit 0
 }
 
 trap terminate SIGINT SIGTERM

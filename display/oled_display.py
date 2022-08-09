@@ -22,8 +22,9 @@ class Display(DisplayInterface):
 		self.__font = ImageFont.load_default()
 		self.__in_display = False
 
-	def __del__(self):
-		self.__display.clear()
+	def cleanup(self) -> None:
+		blank_image = Image.new('1', (self.max_width(), self.max_height()), 'WHITE')
+		self.__display.ShowImage(self.__display.getbuffer(blank_image))
 
 	def max_height(self) -> int:
 		return self.__display.height

@@ -16,7 +16,7 @@ class Display(DisplayInterface):
 		curses.cbreak()
 		curses.curs_set(0)
 
-	def __del__(self):
+	def cleanup(self) -> None:
 		curses.nocbreak()
 		self.__terminal.keypad(False)
 		curses.echo()

@@ -14,6 +14,10 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 	# The following methods MUST be implemented by child classes!
 
 	@abc.abstractmethod
+	def cleanup(self) -> None:
+		pass
+
+	@abc.abstractmethod
 	def max_height(self) -> int:
 		pass
 

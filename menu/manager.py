@@ -24,6 +24,9 @@ class Manager():
 		else:
 			raise UnknownMenu(name)
 
+	def cleanup(self) -> None:
+		self.display.cleanup()
+
 	async def run(self) -> None:
 		current_menu = 'main'
 		current_index = 0
