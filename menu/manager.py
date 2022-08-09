@@ -18,6 +18,9 @@ class Manager():
 		self.variables = variables.Parser()
 		self.display = display.Display(self.variables)
 
+	def __del__(self):
+		self.cleanup()
+
 	def get_menu_config(self, name: str) -> dict:
 		if name in self.menu_config:
 			return self.menu_config[name]
@@ -68,7 +71,7 @@ class Manager():
 					#run specific actions based on the selection
 					if 'action' in selection:
 						await self.display.message(title='Processing...', subtitle='Please be patient.')
-						await self.variables.action(selection['action'], display=self.display)
+						await self.variables.action(selection['action'])
 
 					#move to a new menu
 					if 'goto' in selection:

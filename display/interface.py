@@ -10,6 +10,7 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 		self.variables = variable_handler
 		self.menu_index = 0
 		self.menu_max_options = 0
+		self.variables.display = self #ooh, nice circular dependency!
 
 	# The following methods MUST be implemented by child classes!
 

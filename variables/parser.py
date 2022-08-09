@@ -8,9 +8,10 @@ class Parser:
 	def __init__(self):
 		self.__config = {}
 		self.__vars = {}
+		self.display = None
 		self.load('config/vars.json')
 
-	async def __get_output_of(self, command: str, *, allow_null: bool = False, display: object = None): #could return anything
+	async def __get_output_of(self, command: str, *, allow_null: bool = False): #could return anything
 		if isinstance(command, dict):
 			if 'bash' in command:
 				result = await self.__run_bash_cmd(command['bash'])
@@ -21,7 +22,7 @@ class Parser:
 				return result if delim is None else result.split(delim)
 			elif 'py' in command:
 				behavior = behaviors.get(command['py'])
-				return await behavior(variables=self, display=display)
+				return await behavior(variables=self, display=self.display)
 		else:
 			behavior = behaviors.get(command)
 			return await behavior(variables=self)
@@ -90,9 +91,9 @@ class Parser:
 		else:
 			return self.__vars[var_name]
 
-	async def action(self, var_name: str, *, display: object = None) -> None:
+	async def action(self, var_name: str) -> None:
 		if var_name in self.__config and 'action' in self.__config[var_name]:
-			await self.__get_output_of(self.__config[var_name]['action'], allow_null=True, display=display)
+			await self.__get_output_of(self.__config[var_name]['action'], allow_null=True)
 		else:
 			raise UnknownAction(var_name)
 
