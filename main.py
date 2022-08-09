@@ -4,7 +4,7 @@ import asyncio
 import signal
 from pathlib import Path
 import os
-from sys import argv
+from sys import argv, executable
 
 class GracefulExit(SystemExit):
 	pass
@@ -25,10 +25,11 @@ async def main():
 
 if __name__ == '__main__':
 	os.chdir(str(Path(__file__).parent)) #Make sure working dir is always in the project root
-	looping = True if '--loop' in argv else False
 
 	if '--loop' in argv:
 		while True:
 			asyncio.run(main())
+			#If user exits, reload this whole program
+			os.execl(executable, executable, *argv)
 	else:
 		asyncio.run(main())
