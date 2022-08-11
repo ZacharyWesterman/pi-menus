@@ -3,7 +3,7 @@ from behaviors import register
 import asyncio
 
 @register('fetch_update')
-async def fetch_update(variables: object, **args) -> None:
+async def fetch_update(variables: object, display: object, **args) -> None:
 	async def run_cmd(cmd: str):
 		process = await asyncio.create_subprocess_shell(
 			cmd,
@@ -17,5 +17,15 @@ async def fetch_update(variables: object, **args) -> None:
 			stderr = stderr.decode().rstrip('\n')
 			raise Exception(f'Failed to fetch update:\n{stderr}')
 
+	def get_version():
+		with open('config/version.txt', 'r') as fp:
+			return fp.readlines()[0]
+
+	old_version = get_version()
 	await run_cmd('git pull --ff-only')
 	await run_cmd('chown pi:pi .git * -R')
+	new_version = get_version()
+
+	if old_version != new_version:
+		await display.message(title='Version Updated', subtitle=f'{old_version} -> {new_version}', text='Please exit main menu \nto finish update.')
+		await asyncio.sleep(3)
