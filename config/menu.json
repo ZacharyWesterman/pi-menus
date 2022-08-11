@@ -35,10 +35,10 @@
 
 	"network": {
 		"type": "menu",
-		"title": "{network_ssid}",
+		"title": "Network Options",
 		"options": [
 			{
-				"text": "Device Info",
+				"text": "Connection Info",
 				"goto": "device_info"
 			},
 			{
@@ -87,8 +87,8 @@
 
 	"device_info": {
 		"type": "message",
-		"title": "Device Info",
-		"text": "IP: {ip_address}\nID: {hostname}"
+		"title": "Connection Info",
+		"text": "{network_ssid}\n{ip_address}"
 	},
 
 	"software": {
