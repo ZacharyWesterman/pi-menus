@@ -66,6 +66,12 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 	async def await_movement(self) -> None:
 		pass
 
+	async def user_acknowledge(self) -> None:
+		try:
+			await self.await_movement()
+		except CancelInput:
+			pass
+
 	# Below this comment, no more methods need to be implemented by child classes.
 
 	async def redisplay_menu(self) -> None:

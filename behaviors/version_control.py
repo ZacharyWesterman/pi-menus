@@ -19,7 +19,7 @@ async def fetch_update(variables: object, display: object, **args) -> None:
 
 	def get_version():
 		with open('config/version.txt', 'r') as fp:
-			return fp.readlines()[0]
+			return fp.read().strip()
 
 	old_version = get_version()
 	await run_cmd('git pull --ff-only')
@@ -27,5 +27,5 @@ async def fetch_update(variables: object, display: object, **args) -> None:
 	new_version = get_version()
 
 	if old_version != new_version:
-		await display.message(title='Version Updated', subtitle=f'{old_version} -> {new_version}', text='Please exit main menu \nto finish update.')
-		await asyncio.sleep(3)
+		await display.message(title='Version Updated', subtitle=f'{old_version} to {new_version}', text='Please exit main menu \nto finish update.')
+		await display.user_acknowledge()
