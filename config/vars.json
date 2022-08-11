@@ -15,7 +15,7 @@
 
 	"device_list": {
 		"get": {
-			"bash": "nmap -sn \"$(ip route | awk '/default/ {print $3}' | head -1)\"/24 -oG - | grep 'Status: Up'",
+			"bash": "nmap -sn \"$(ip route | awk '/default/ {{print $3}}' | head -1)\"/24 -oG - | grep 'Status: Up'",
 			"delim": "\n"
 		},
 		"cache": false
@@ -29,7 +29,7 @@
 
 	"network_pass": {
 		"set": {
-			"bash": "ifconfig wlan0 down; sed 's/ssid=\"[^\"]*\"/ssid=\"{line}\"/' /etc/wpa_supplicant/wpa_supplicant.conf | sed 's/psk=\"[^\"]*\"/psk=\"{network_pass}\"/' >tmp; mv tmp /etc/wpa_supplicant/wpa_supplicant.conf; ifconfig wlan0 up; systemctl daemon-reload; systemctl restart dhcpcd; wpa_cli -i wlan0 reconfigure"
+			"bash": "raspi-config nonint do_wifi_ssid_passphrase '{line}' '{network_pass}'"
 		},
 		"unset": [ "network_ssid", "device_list", "ip_address" ]
 	},

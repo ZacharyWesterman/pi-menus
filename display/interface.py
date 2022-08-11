@@ -163,6 +163,12 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 		self.menu_max_options = len(self.menu_item.get('options', []))
 		await self.redisplay_menu()
 
+	async def __set_line_and_items(self, value: str) -> None:
+		await self.variables.set('line', value)
+		items = value.split()
+		items += [''] * (10 - len(items))
+		await self.variables.set('item', items)
+
 	async def menu(self, menu_item: dict, menu_index: int = 0) -> dict:
 		self.menu_item = copy.deepcopy(menu_item)
 		self.menu_max_options = len(self.menu_item.get('options', []))
@@ -186,6 +192,7 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 				if len(options) > self.menu_index:
 					this_option = options[self.menu_index]
 					if any(k in this_option for k in ('input', 'action', 'return', 'goto')):
+						await self.__set_line_and_items(this_option.get('text', ''))
 						break
 
 				#Otherwise, continue polling for menu navigation
@@ -209,10 +216,7 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 			if type(value) is str:
 				value = [value]
 			for line in value:
-				await self.variables.set('line', line)
-				items = line.split()
-				items += [''] * (10 - len(items))
-				await self.variables.set('item', items)
+				await self.__set_line_and_items(line)
 				for option in self.menu_item['template']['options']:
 					options += [await self.__parse_menu_option(option)]
 

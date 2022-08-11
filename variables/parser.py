@@ -14,9 +14,10 @@ class Parser:
 	async def __get_output_of(self, command: str, *, allow_null: bool = False): #could return anything
 		if isinstance(command, dict):
 			if 'bash' in command:
-				result = await self.__run_bash_cmd(command['bash'])
+				cmd = await self.parse(command['bash'])
+				result = await self.__run_bash_cmd(cmd)
 				if result == '' and not allow_null:
-					raise FailedVarLoad(command['bash'])
+					raise FailedVarLoad(cmd)
 				delim = command.get('delim')
 
 				return result if delim is None else result.split(delim)
@@ -70,7 +71,7 @@ class Parser:
 				setcmd = self.__config[var_name]['set']
 				result = await self.__get_output_of(setcmd, allow_null=True)
 
-	async def get(self, var_name: str, default = None): #This could return anything!
+	async def get(self, var_name: str): #This could return anything!
 		#Don't keep any vars that are not cached!
 		if (var_name in self.__vars) and (var_name in self.__config) and self.__config[var_name].get('cache', False):
 			self.unset(var_name)
