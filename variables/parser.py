@@ -72,16 +72,15 @@ class Parser:
 				result = await self.__get_output_of(setcmd, allow_null=True)
 
 	async def get(self, var_name: str): #This could return anything!
-		#Don't keep any vars that are not cached!
-		if (var_name in self.__vars) and (var_name in self.__config) and self.__config[var_name].get('cache', False):
-			self.unset(var_name)
-
 		if var_name not in self.__vars:
 			if var_name not in self.__config:
 				raise UnknownVar(var_name) #var not in config, so can't load it.
 			elif 'get' in self.__config[var_name]:
 				result = await self.__get_output_of(self.__config[var_name]['get'], allow_null=True)
 				await self.set(var_name, result)
+				print(f'set {var_name} to {result}')
+				if not self.__config[var_name].get('cache', True):
+					self.unset(var_name)
 				return result
 			elif 'default' in self.__config[var_name]:
 				default = self.__config[var_name]['default']
