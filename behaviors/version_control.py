@@ -26,7 +26,7 @@ async def fetch_update(variables: object, display: object, **args) -> None:
 
 	#Check if update is available
 	await run_cmd('git fetch')
-	updated_files = await run_cmd('git log --name-status origin/main..')
+	updated_files = await run_cmd('git diff --name-only main origin/main')
 
 	#If no updates available, exit
 	if updated_files == '':
