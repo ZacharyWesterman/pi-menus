@@ -78,7 +78,6 @@ class Parser:
 			elif 'get' in self.__config[var_name]:
 				result = await self.__get_output_of(self.__config[var_name]['get'], allow_null=True)
 				await self.set(var_name, result)
-				print(f'set {var_name} to {result}')
 				if not self.__config[var_name].get('cache', True):
 					self.unset(var_name)
 				return result
