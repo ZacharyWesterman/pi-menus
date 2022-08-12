@@ -31,6 +31,7 @@ async def fetch_update(variables: object, display: object, **args) -> None:
 	#If no updates available, exit
 	if updated_files == '':
 		await display.message('Already up-to-date.')
+		await asyncio.sleep(2)
 		return
 
 	await display.message(title='Update Available', text='Installing Update...')
