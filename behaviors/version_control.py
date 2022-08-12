@@ -15,6 +15,7 @@ async def fetch_update(variables: object, display: object, **args) -> None:
 
 		if len(stderr):
 			stderr = stderr.decode().rstrip('\n')
+			print(stderr)
 			raise Exception(f'Failed to fetch update:\n{stderr}')
 
 	def get_version():
@@ -22,7 +23,7 @@ async def fetch_update(variables: object, display: object, **args) -> None:
 			return fp.read().strip()
 
 	old_version = get_version()
-	await run_cmd('git pull --ff-only')
+	await run_cmd('git pull --ff-only --quiet')
 	await run_cmd('chown pi:pi .git * -R')
 	new_version = get_version()
 
