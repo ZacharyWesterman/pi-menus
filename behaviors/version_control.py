@@ -15,7 +15,6 @@ async def fetch_update(variables: object, display: object, **args) -> None:
 
 		if len(stderr):
 			stderr = stderr.decode().rstrip('\n')
-			print(stderr)
 			raise Exception(f'Failed to fetch update:\n{stderr}')
 
 		return stdout.decode().rstrip('\n')
