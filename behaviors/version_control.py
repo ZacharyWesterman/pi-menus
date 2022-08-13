@@ -25,7 +25,7 @@ async def fetch_update(variables: object, display: object, **args) -> None:
 			return fp.read().strip()
 
 	#Check if update is available
-	await run_cmd('git fetch')
+	await run_cmd('git fetch --quiet')
 	updated_files = await run_cmd('git diff --name-only main origin/main')
 
 	#If no updates available, exit
