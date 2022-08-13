@@ -1,5 +1,6 @@
 import json
 import asyncio
+import re
 
 from .exceptions import *
 import behaviors
@@ -99,6 +100,16 @@ class Parser:
 	async def parse(self, text: str) -> str:
 		failed_vars = {}
 
+		#Shortcut to find most var names as quickly as possible
+		pattern = r'(?<!\{\{)(?<=\{)\w+'
+		matches = re.findall(pattern, text)
+
+		for var_name in matches:
+			result = await self.get(var_name)
+			if var_name not in self.__vars:
+				failed_vars[var_name] = result
+
+		#Redo parse at MOST 20 times...
 		for i in range(20): #DON'T loop forever!
 			try:
 				return text.format(**self.__vars, **failed_vars)
@@ -107,3 +118,4 @@ class Parser:
 					result = await self.get(var_name)
 					if var_name not in self.__vars:
 						failed_vars[var_name] = result
+			asyncio.sleep(0)
