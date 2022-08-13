@@ -41,8 +41,8 @@ async def fetch_update(variables: object, display: object, **args) -> None:
 	new_version = get_version()
 
 	#If dependencies change, make sure they all get installed.
-	if 'requirements.txt' in updated_files:
-		await run_cmd('venv/bin/python -m pip install -r requirements.txt --no-warn-script-location')
+	if 'config/requirements.txt' in updated_files:
+		await run_cmd('venv/bin/python -m pip install -r config/requirements.txt --no-warn-script-location')
 
 	await display.message(title='Version Updated', subtitle=f'{old_version} to {new_version}', text='Please exit main menu \nto finish update.')
 	await display.user_acknowledge()
