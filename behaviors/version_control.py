@@ -41,8 +41,9 @@ async def fetch_update(variables: object, display: object, **args) -> None:
 	await run_cmd('chown pi:pi .git * -R')
 	new_version = get_version()
 
-	#ALWAYS make sure python dependencies are installed.
-	await run_cmd('venv/bin/python -m pip install -r requirements.txt --no-warn-script-location')
+	#If dependencies change, make sure they all get installed.
+	if 'requirements.txt' in updated_files:
+		await run_cmd('venv/bin/python -m pip install -r requirements.txt --no-warn-script-location')
 
 	await display.message(title='Version Updated', subtitle=f'{old_version} to {new_version}', text='Please exit main menu \nto finish update.')
 	await display.user_acknowledge()
