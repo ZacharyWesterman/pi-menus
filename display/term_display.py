@@ -79,13 +79,20 @@ class Display(DisplayInterface):
 		curses.curs_set(0)
 		return text
 
-	def put(self, y_pos: int, text: str, *, bold: bool = False, italics: bool = False, inverted: bool = False, is_option: bool = False) -> None:
+	def put(self, y_pos: int, _text: str, *, bold: bool = False, italics: bool = False, inverted: bool = False, is_option: bool = False) -> None:
 		flags = 0
 		if bold: flags += curses.A_BOLD
 		if italics: flags += curses.A_ITALIC
 		if inverted: flags += curses.A_REVERSE
-		if is_option: text = f'> {text}'.ljust(self.max_width()-1)
-		self.__terminal.addstr(y_pos, 0, text, flags)
+		if is_option: _text = f'> {_text}'.ljust(self.max_width()-1)
+		self.__terminal.addstr(y_pos, 0, _text, flags)
+
+	def text(self, x: int, y:int, _text: str, *, bold: bool = False, italics: bool = False, inverted: bool = False) -> None:
+		flags = 0
+		if bold: flags += curses.A_BOLD
+		if italics: flags += curses.A_ITALIC
+		if inverted: flags += curses.A_REVERSE
+		self.__terminal.addstr(y, x, _text, flags)
 
 	def hline(self, x_pos: int, y_pos: int, width: int) -> None:
 		self.__terminal.hline(y_pos, x_pos, '-', width)

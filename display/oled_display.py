@@ -7,7 +7,7 @@ import asyncio
 import RPi.GPIO as GPIO
 from .SH1106 import SH1106, config, pins
 
-from .oled_keyboard import keyboard
+from .oled_keyboard import Keyboard
 
 from .interface import DisplayInterface, CancelInput
 
@@ -55,30 +55,30 @@ class Display(DisplayInterface):
 		self.draw = ImageDraw.Draw(self.image)
 
 	async def get(self, hidden: bool = False) -> str:
-		keys = keyboard(self.__display)
+		keys = Keyboard(self)
 		keys.hidden = hidden
-		keys.draw(True)
+		await keys.show()
 
 		self.menu_failed = False
 		self.menu_exited = False
 
-		def menu_fail(_ = None):
+		async def menu_fail():
 			if keys.text == '':
 				self.menu_failed = True
 			else:
-				keys.backspace()
+				await keys.backspace()
 
 		def menu_exit(_ = None):
 			self.menu_exited = True
 
-		GPIO.add_event_detect(pins.KEY_LEFT, GPIO.FALLING, callback=keys.left, bouncetime=200)
-		GPIO.add_event_detect(pins.KEY_RIGHT, GPIO.FALLING, callback=keys.right, bouncetime=200)
-		GPIO.add_event_detect(pins.KEY_UP, GPIO.FALLING, callback=keys.up, bouncetime=200)
-		GPIO.add_event_detect(pins.KEY_DOWN, GPIO.FALLING, callback=keys.down, bouncetime=200)
-		GPIO.add_event_detect(pins.KEY_PRESS, GPIO.FALLING, callback=keys.select, bouncetime=250)
-		GPIO.add_event_detect(pins.KEY1, GPIO.FALLING, callback=keys.toggleShift, bouncetime=250)
+		GPIO.add_event_detect(pins.KEY_LEFT, GPIO.FALLING, callback=lambda _: asyncio.run(keys.left()), bouncetime=200)
+		GPIO.add_event_detect(pins.KEY_RIGHT, GPIO.FALLING, callback=lambda _: asyncio.run(keys.right()), bouncetime=200)
+		GPIO.add_event_detect(pins.KEY_UP, GPIO.FALLING, callback=lambda _: asyncio.run(keys.up()), bouncetime=200)
+		GPIO.add_event_detect(pins.KEY_DOWN, GPIO.FALLING, callback=lambda _: asyncio.run(keys.down()), bouncetime=200)
+		GPIO.add_event_detect(pins.KEY_PRESS, GPIO.FALLING, callback=lambda _: asyncio.run(keys.select()), bouncetime=250)
+		GPIO.add_event_detect(pins.KEY1, GPIO.FALLING, callback=lambda _: asyncio.run(keys.toggleShift()), bouncetime=250)
 		GPIO.add_event_detect(pins.KEY2, GPIO.FALLING, callback=menu_exit, bouncetime=250)
-		GPIO.add_event_detect(pins.KEY3, GPIO.FALLING, callback=menu_fail, bouncetime=250)
+		GPIO.add_event_detect(pins.KEY3, GPIO.FALLING, callback=lambda _: asyncio.run(menu_fail()), bouncetime=250)
 
 		while not (self.menu_exited or self.menu_failed):
 			await asyncio.sleep(0.1)
@@ -97,15 +97,36 @@ class Display(DisplayInterface):
 		else:
 			return keys.text
 
-	def put(self, y_pos: int, text: str, *, bold: bool = False, italics: bool = False, inverted: bool = False, is_option: bool = False) -> None:
-		self.rect(
-			bounds = (
-				(0, y_pos),
-				(self.max_width(), y_pos + self.text_scale())
-			),
-			fill = not inverted
-		)
-		self.draw.text((1, y_pos), text, font=self.__font, fill=int(inverted))
+	def put(self, y_pos: int, _text: str, *, bold: bool = False, italics: bool = False, inverted: bool = False, is_option: bool = False) -> None:
+		if y_pos < 0:
+			y_pos = self.max_height() - self.text_scale() + (y_pos + 1)
+
+		if inverted:
+			self.rect(
+				bounds = (
+					(0, y_pos),
+					(self.max_width(), y_pos + self.text_scale())
+				),
+				fill = False
+			)
+		self.draw.text((1, y_pos), _text, font=self.__font, fill=int(inverted))
+
+	def text(self, x: int, y:int, _text: str, *, bold: bool = False, italics: bool = False, inverted: bool = False) -> None:
+		if x < 0:
+			x = self.max_width() - len(_text) * (self.text_scale() - 4) + (x + 1)
+
+		if y < 0:
+			y = self.max_height() - self.text_scale() + (y + 1)
+
+		if inverted:
+			self.rect(
+				bounds = (
+					(x, y),
+					(x + self.text_scale() - 3, y + (len(_text) * self.text_scale()))
+				),
+				fill = False
+			)
+		self.draw.text((x+1, y), _text, font = self.__font, fill=int(inverted))
 
 	def rect(self, bounds: tuple, fill: bool) -> None:
 		self.draw.rectangle(bounds, fill = int(fill))

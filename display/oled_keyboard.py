@@ -1,10 +1,6 @@
-from PIL import Image, ImageDraw, ImageFont
-
-class keyboard(object):
-	def __init__(self, disp):
-		self.autoDisplay = False
-		self.disp = disp
-		self.font = ImageFont.load_default()
+class Keyboard:
+	def __init__(self, display):
+		self.display = display
 		self.x = 0
 		self.y = 0
 		self.text = ''
@@ -12,18 +8,15 @@ class keyboard(object):
 		self.altKeys = ['~!@#$%^&*()_+','QWERTYUIOP{}|','ASDFGHJKL:"  ','ZXCVBNM<>?   ']
 		self.shift = False
 		self.hidden = False
+		self.is_displaying = False
 
-	def draw(self, status):
-		self.autoDisplay = status
-		if status:
-			self.selected = 0
-			self.display()
-		else:
-			self.disp.clear()
+	async def show(self):
+		if self.is_displaying:
+			return
 
-	def display(self):
-		image = Image.new('1', (self.disp.width, self.disp.height), "WHITE")
-		draw = ImageDraw.Draw(image)
+		self.is_displaying = True
+
+		self.display.clear()
 
 		scale = 11
 		scaleX = 8
@@ -31,57 +24,64 @@ class keyboard(object):
 		for row in (self.altKeys if self.shift else self.keys):
 			x = 0
 			for key in row:
-				draw.rectangle([(x*(scaleX),y*scale + 2),((x+1)*(scaleX)-2,(y+1)*scale+1)],fill=int(x != self.x or y != self.y))
-				draw.text((x*(scaleX) + 1,y*scale + 1),key,font=self.font,fill=int(x == self.x and y == self.y))
+				if x == self.x and y == self.y:
+					self.display.rect(bounds=[(x*scaleX, y*scale + 2),((x+1)*(scaleX)-2,(y+1)*scale+1)], fill=True)
+
+				self.display.text(x * scaleX, y * scale, key, inverted=(x == self.x and y == self.y))
 				x += 1
 			y += 1
 
 		# Remind user what the 3 buttons do.
-		draw.text((self.disp.width-scale-1, 2),'aA',fill=0)
-		draw.text((self.disp.width-scale-1, 20),' »',fill=0)
-		draw.text((self.disp.width-scale-1, 38),' «',fill=0)
-		draw.line([(self.disp.width-scale-3,0),(self.disp.width-scale-3,self.disp.height-scale-1)],fill=0)
+		self.display.text(-1, 2, 'aA')
+		self.display.text(-1, 20, ' »')
+		self.display.text(-1, 38, ' «')
 
-		draw.line([(0,self.disp.height-scale-1),(self.disp.width,self.disp.height-scale-1)],fill=0)
-		if self.hidden:
-			draw.text((1,self.disp.height-scale),'*'*len(self.text),fill=0)
-		else:
-			draw.text((1,self.disp.height-scale),self.text,fill=0)
+		#Make some nice borders
+		vertical_bar = self.display.max_width() - 2*scale
+		horizontal_bar = self.display.max_height() - int(1.5*scale)
+		self.display.vline(vertical_bar, 0, horizontal_bar)
+		self.display.hline(0, horizontal_bar, self.display.max_width())
 
-		self.disp.ShowImage(self.disp.getbuffer(image))
+		#Show what user has already input
+		msg = '*'*len(self.text) if self.hidden else self.text
+		self.display.put(-1, msg)
 
-	def toggleShift(self, _=None):
+		await self.display.display()
+
+		self.is_displaying = False
+
+	async def toggleShift(self, _=None):
 		self.shift = not self.shift
-		if self.autoDisplay: self.display()
+		await self.show()
 
 	def __boundXY(self):
 		self.y %= len(self.altKeys if self.shift else self.keys)
 		self.x %= len((self.altKeys if self.shift else self.keys)[self.y])
 
-	def left(self, _=None):
+	async def left(self):
 		self.x -= 1
 		self.__boundXY()
-		if self.autoDisplay: self.display()
+		await self.show()
 
-	def right(self, _=None):
+	async def right(self):
 		self.x += 1
 		self.__boundXY()
-		if self.autoDisplay: self.display()
+		await self.show()
 
-	def up(self, _=None):
+	async def up(self):
 		self.y -= 1
 		self.__boundXY()
-		if self.autoDisplay: self.display()
+		await self.show()
 
-	def down(self, _=None):
+	async def down(self):
 		self.y += 1
 		self.__boundXY()
-		if self.autoDisplay: self.display()
+		await self.show()
 
-	def select(self, _=None):
+	async def select(self, _=None):
 		self.text += (self.altKeys if self.shift else self.keys)[self.y][self.x]
-		if self.autoDisplay: self.display()
+		await self.show()
 
-	def backspace(self, _=None):
+	async def backspace(self, _=None):
 		self.text = self.text[:-1]
-		if self.autoDisplay: self.display()
+		await self.show()

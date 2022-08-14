@@ -47,7 +47,11 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 		pass
 
 	@abc.abstractmethod
-	def put(self, y_pos: int, text: str, *, bold: bool = False, italics: bool = False, inverted: bool = False, is_option: bool = False) -> None:
+	def put(self, y_pos: int, _text: str, *, bold: bool = False, italics: bool = False, inverted: bool = False, is_option: bool = False) -> None:
+		pass
+
+	@abc.abstractmethod
+	def text(self, x: int, y:int, _text: str, *, bold: bool = False, italics: bool = False, inverted: bool = False) -> None:
 		pass
 
 	@abc.abstractmethod
