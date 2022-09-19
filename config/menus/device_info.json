@@ -1,0 +1,5 @@
+{
+	"type": "message",
+	"title": "Connection Info",
+	"text": "{network_ssid}\n{ip_address}"
+}

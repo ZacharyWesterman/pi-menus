@@ -1,0 +1,6 @@
+{
+	"set": {
+		"bash": "raspi-config nonint do_wifi_ssid_passphrase '{line}' '{network_pass}'"
+	},
+	"unset": [ "network_ssid", "device_list", "ip_address" ]
+}

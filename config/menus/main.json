@@ -1,0 +1,18 @@
+{
+	"type": "menu",
+	"title": "Main Menu",
+	"options": [
+		{
+			"text": "Network Options",
+			"goto": "network"
+		},
+		{
+			"text": "Software Version",
+			"goto": "software"
+		},
+		{
+			"text": "Shut Down",
+			"goto": "shutdown"
+		}
+	]
+}

@@ -1,6 +1,7 @@
 import json
 import asyncio
 import re
+from pathlib import Path
 
 from .exceptions import *
 import behaviors
@@ -10,7 +11,7 @@ class Parser:
 		self.__config = {}
 		self.__vars = {}
 		self.display = None
-		self.load('config/vars.json')
+		self.load('config/vars')
 
 	async def __get_output_of(self, command: str, *, allow_null: bool = False): #could return anything
 		if isinstance(command, dict):
@@ -40,8 +41,10 @@ class Parser:
 		return stdout.decode('utf-8').rstrip('\n')
 
 	def load(self, filename: str) -> None:
-		with open(filename, 'r') as fp:
-			self.__config = json.load(fp)
+		self.__config = {}
+		for f in Path(filename).iterdir():
+			with open(str(f), 'r') as fp:
+				self.__config[f.stem] = json.load(fp)
 
 	def clear(self) -> None:
 		self.__config = {}

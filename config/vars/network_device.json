@@ -1,0 +1,5 @@
+{
+	"get": {
+		"bash": "iw dev | grep Interface | head -1 | xargs | cut -b 11-"
+	}
+}

@@ -1,0 +1,14 @@
+{
+	"type": "menu",
+	"title": "Shut Down?",
+	"options": [
+		{
+			"text": "Yes",
+			"action": "shutdown"
+		},
+		{
+			"text": "No",
+			"return": true
+		}
+	]
+}

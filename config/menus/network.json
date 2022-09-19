@@ -1,0 +1,18 @@
+{
+	"type": "menu",
+	"title": "Network Options",
+	"options": [
+		{
+			"text": "Connection Info",
+			"goto": "device_info"
+		},
+		{
+			"text": "List Devices",
+			"goto": "device_list"
+		},
+		{
+			"text": "Change Network",
+			"goto": "network_list"
+		}
+	]
+}

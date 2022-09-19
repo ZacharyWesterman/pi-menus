@@ -1,0 +1,14 @@
+{
+	"type": "menu",
+	"title": "Devices on Network",
+	"template": {
+		"var": "device_list",
+		"options": [
+			{
+				"text": "{item[2]}",
+				"alt": "{item[1]}"
+			}
+		]
+	},
+	"options": []
+}

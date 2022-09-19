@@ -1,0 +1,5 @@
+{
+	"get": {
+		"bash": "head -1 < config/version.txt"
+	}
+}

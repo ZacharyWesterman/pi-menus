@@ -1,0 +1,10 @@
+{
+	"type": "menu",
+	"title": "Version {software_version}",
+	"options": [
+		{
+			"text": "Fetch update",
+			"action": "fetch_update"
+		}
+	]
+}

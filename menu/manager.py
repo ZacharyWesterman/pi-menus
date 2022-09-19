@@ -1,6 +1,7 @@
 import asyncio
 import json
 import traceback
+from pathlib import Path
 
 import display
 import variables
@@ -9,8 +10,10 @@ from .exceptions import *
 
 class Manager():
 	def __init__(self):
-		with open('config/menu.json', 'r') as fp:
-			self.menu_config = json.load(fp)
+		self.menu_config = {}
+		for f in Path('config/menus').iterdir():
+			with open(str(f), 'r') as fp:
+				self.menu_config[f.stem] = json.load(fp)
 
 		if 'main' not in self.menu_config:
 			raise NoEntryPoint()

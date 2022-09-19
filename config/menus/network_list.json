@@ -1,0 +1,17 @@
+{
+	"type": "menu",
+	"title": "Available Networks",
+	"template": {
+		"var": "network_list",
+		"options": [
+			{
+				"text": "{line}",
+				"input": {
+					"var": "network_pass",
+					"password": true
+				},
+				"return": true
+			}
+		]
+	}
+}

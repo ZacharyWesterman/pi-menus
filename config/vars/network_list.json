@@ -1,0 +1,7 @@
+{
+	"get": {
+		"bash": "iwlist wlan0 scanning | grep ESSID | grep -v '\"\"' | grep -v '\\x' | sed 's/^[ \\t]*ESSID:\"//' | sed 's/\"$//' | sort | uniq",
+		"delim": "\n"
+	},
+	"cache": false
+}

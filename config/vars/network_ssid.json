@@ -1,0 +1,6 @@
+{
+	"get": {
+		"bash": "iwgetid --raw"
+	},
+	"cache": false
+}
