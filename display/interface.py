@@ -185,7 +185,7 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 		self.menu_index = max(menu_index, 0)
 		self.menu_index = min(self.menu_index, self.menu_max_options - 1)
 
-		await self.redisplay_menu()
+		await self.message(title='Loading...', subtitle='Please be patient.')
 		user_input = asyncio.create_task(self.await_movement())
 		var_display = asyncio.create_task(self.__load_menu_vars())
 
