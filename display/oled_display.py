@@ -10,7 +10,7 @@ def CHECK_FOR_SPI():
     if not SPI.exists():
         print('Waiting for SPI interface to come online...')
         for i in range(30):
-            time.sleep(1000)
+            time.sleep(1)
             if SPI.exists():
                 return
 
