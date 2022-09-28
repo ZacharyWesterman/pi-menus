@@ -1,0 +1,5 @@
+{
+	"type": "message",
+	"title": "Device Info",
+	"text": "IP: {selection[ip]}"
+}

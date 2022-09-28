@@ -55,6 +55,8 @@ class Manager():
 			try:
 				if menu_item['type'] == 'menu':
 					selection = await self.display.menu(menu_item, current_index)
+					await self.variables.set('selection', selection)
+					print('set selection')
 					#get a value and set a var based on that
 					if 'input' in selection:
 						cfg = selection['input']

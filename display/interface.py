@@ -202,7 +202,7 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 				if len(options) > self.menu_index:
 					this_option = options[self.menu_index]
 					if any(k in this_option for k in ('input', 'action', 'return', 'goto')):
-						await self.__set_line_and_items(this_option.get('text', ''))
+						# await self.__set_line_and_items(this_option.get('text', ''))
 						break
 
 				#Otherwise, continue polling for menu navigation
