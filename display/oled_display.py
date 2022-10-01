@@ -128,7 +128,11 @@ class Display(DisplayInterface):
 				),
 				fill = False
 			)
-		self.draw.text((1, y_pos), _text, font=self.__font, fill=int(inverted))
+
+		#keep spacing between lines smaller
+		for txt in _text.split('\n'):
+			self.draw.text((1, y_pos), txt, font=self.__font, fill=int(inverted))
+			y_pos += self.text_scale()
 
 	def text(self, x: int, y:int, _text: str, *, bold: bool = False, italics: bool = False, inverted: bool = False) -> None:
 		if x < 0:
