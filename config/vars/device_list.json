@@ -1,6 +1,7 @@
 {
 	"get": {
-		"bash": "nmap -sn \"$(ip route | awk '/default/ {{print $3}}' | head -1)\"/24 -oG - | grep 'Status: Up'",
+		"bash": "arp -a | tr -d '()'",
 		"delim": "\n"
-	}
+	},
+	"cache": false
 }

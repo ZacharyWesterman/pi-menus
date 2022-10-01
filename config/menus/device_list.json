@@ -5,8 +5,7 @@
 		"var": "device_list",
 		"options": [
 			{
-				"text": "{item[2]}",
-				"alt": "{item[1]}",
+				"text": "{item[1]}",
 				"ip": "{item[1]}",
 				"goto": "network_device_info"
 			}
