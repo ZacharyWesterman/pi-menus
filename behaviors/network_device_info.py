@@ -14,11 +14,13 @@ async def get_device_info(variables: object, display: object, **args) -> dict:
 	if name != '?':
 		msg += [f'ID  {name}']
 
+	msg += [f'MAC {mac}']
+
 	try:
 		with open(f'config/mac_vendors/{mac[0:2]}/{mac[0:6]}', 'r') as fp:
 			msg += [fp.read()]
 	except FileNotFoundError:
-		msg += [f'MAC {mac}']
+		pass
 
 	return {
 		'ip': ip,
