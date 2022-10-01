@@ -1,0 +1,5 @@
+{
+	"action": {
+		"bash": "sudo nmap -sn \"$(ip route | awk '/default/ {{print $3}}' | head -1)\"/24 -oG - | grep 'Status: Up' | awk '{{print $2}}' | xargs -I '%' ping -c 1 '%'"
+	}
+}

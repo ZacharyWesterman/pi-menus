@@ -11,6 +11,11 @@
 			"goto": "device_list"
 		},
 		{
+			"text": "Scan For Devices",
+			"action": "scan_network",
+			"goto": "device_list"
+		},
+		{
 			"text": "Change Network",
 			"goto": "network_list"
 		}

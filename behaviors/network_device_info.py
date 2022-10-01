@@ -3,7 +3,7 @@ from behaviors import register
 import asyncio
 
 @register('network_device_info')
-async def get_device_info(variables: object, display: object, **args) -> dict:
+async def get_device_info(variables: object, **args) -> dict:
 	selection = await variables.get('selection')
 	ip = selection.get('ip', 'ERR: NO IP')
 	name = selection.get('name')
