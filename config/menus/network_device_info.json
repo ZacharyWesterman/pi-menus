@@ -1,5 +1,6 @@
 {
 	"type": "message",
 	"title": "Network Device",
-	"text": "IP: {device_info[ip]}"
+	"subtitle": "{device_info[ip]}",
+	"text": "{device_info[msg]}"
 }

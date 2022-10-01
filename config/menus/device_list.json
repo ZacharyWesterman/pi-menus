@@ -7,6 +7,8 @@
 			{
 				"text": "{item[1]}",
 				"ip": "{item[1]}",
+				"name": "{item[0]}",
+				"mac": "{item[3]}",
 				"goto": "network_device_info"
 			}
 		]
