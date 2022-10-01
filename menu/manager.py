@@ -56,7 +56,7 @@ class Manager():
 				if menu_item['type'] == 'menu':
 					selection = await self.display.menu(menu_item, current_index)
 					await self.variables.set('selection', selection)
-					print('set selection')
+
 					#get a value and set a var based on that
 					if 'input' in selection:
 						cfg = selection['input']
@@ -105,5 +105,10 @@ class Manager():
 			except Exception as e:
 				await self.display.message(str(e), title='Unhandled Exception')
 				await asyncio.sleep(2)
+				if len(menu_stack):
+					current_menu, current_index = menu_stack.pop(-1)
+					continue
+				else:
+					break #If user exited the last menu, return
 
 		#do any cleanup here

@@ -1,0 +1,6 @@
+{
+	"get": {
+		"py": "network_device_info"
+	},
+	"cache": false
+}

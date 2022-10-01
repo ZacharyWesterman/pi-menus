@@ -1,5 +1,5 @@
 {
 	"type": "message",
-	"title": "Device Info",
-	"text": "IP: {selection[ip]}"
+	"title": "Network Device",
+	"text": "IP: {device_info[ip]}"
 }
