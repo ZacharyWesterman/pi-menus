@@ -6,16 +6,16 @@ from pathlib import Path
 import time
 
 def CHECK_FOR_SPI():
-    SPI = Path('/dev/spidev0.0')
-    if not SPI.exists():
-        print('Waiting for SPI interface to come online...')
-        for i in range(30):
-            time.sleep(1)
-            if SPI.exists():
-                return
+	SPI = Path('/dev/spidev0.0')
+	if not SPI.exists():
+		print('Waiting for SPI interface to come online...')
+		for i in range(30):
+			time.sleep(1)
+			if SPI.exists():
+				return
 
-        print('SPI interface did not load in time. Exiting.')
-        exit(1)
+		print('SPI interface did not load in time. Exiting.')
+		exit(1)
 
 CHECK_FOR_SPI()
 
