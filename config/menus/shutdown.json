@@ -9,6 +9,10 @@
 		{
 			"text": "No",
 			"return": true
+		},
+		{
+			"text": "Restart",
+			"action": "reboot"
 		}
 	]
 }
