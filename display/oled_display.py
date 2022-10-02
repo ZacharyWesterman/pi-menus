@@ -57,21 +57,31 @@ class Display(DisplayInterface):
 	def line_scale(self) -> int:
 		return 3 # need some spacing on either side of the line
 
-	async def display(self) -> None:
+	async def __lock_display(self) -> None:
 		while self.__in_display:
-			await asyncio.sleep(0)
+			await asyncio.sleep(0.2)
 
 		self.__in_display = True
-		self.__display.ShowImage(self.__display.getbuffer(self.image))
+
+	async def __unlock_display(self) -> None:
 		self.__in_display = False
 
+	async def display(self) -> None:
+		await self.__lock_display()
+		self.__display.ShowImage(self.__display.getbuffer(self.image))
+		await self.__unlock_display()
+
 	async def display_nothing(self) -> None:
+		await self.__lock_display()
 		blank_image = Image.new('1', (self.max_width(), self.max_height()), 'WHITE')
 		self.__display.ShowImage(self.__display.getbuffer(blank_image))
+		await self.__unlock_display()
 
-	def clear(self) -> None:
+	async def clear(self) -> None:
+		await self.__lock_display()
 		self.image = Image.new('1', (self.max_width(), self.max_height()), 'WHITE')
 		self.draw = ImageDraw.Draw(self.image)
+		await self.__unlock_display()
 
 	async def get(self, hidden: bool = False) -> str:
 		keys = Keyboard(self)

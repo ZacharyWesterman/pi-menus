@@ -39,7 +39,7 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 		pass
 
 	@abc.abstractmethod
-	def clear(self) -> None:
+	async def clear(self) -> None:
 		pass
 
 	@abc.abstractmethod
@@ -86,7 +86,7 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 		offset = 0
 		scale = self.text_scale()
 
-		self.clear()
+		await self.clear()
 
 		if len(title):
 			self.put(offset, title, bold = True)
@@ -130,7 +130,7 @@ class DisplayInterface(metaclass=abc.ABCMeta):
 		await self.display()
 
 	async def message(self, text: str = '', *, title: str = '', subtitle: str = '') -> None:
-		self.clear()
+		await self.clear()
 		offset = 0
 		if len(title):
 			self.put(offset, title, bold = True)

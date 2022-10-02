@@ -38,11 +38,11 @@ class Display(DisplayInterface):
 	async def display(self) -> None:
 		self.__terminal.refresh()
 
-	def clear(self) -> None:
+	async def clear(self) -> None:
 		self.__terminal.erase()
 
 	async def get(self, hidden: bool = False) -> str:
-		self.clear()
+		await self.clear()
 		curses.curs_set(1)
 
 		startx = self.__terminal.getyx()[1]

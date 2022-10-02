@@ -16,7 +16,7 @@ class Keyboard:
 
 		self.is_displaying = True
 
-		self.display.clear()
+		await self.display.clear()
 
 		scale = 11
 		scaleX = 8
